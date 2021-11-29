@@ -1,0 +1,54 @@
+enum OrderDirection {
+  ASC
+  DESC
+}
+
+enum UserOrderField {
+  AGE
+  NAME
+}
+
+interface Node {
+  id: ID!
+}
+
+type User implements Node {
+  id: ID!
+  age: Int!
+  name: String!
+}
+
+scalar Cursor
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: Cursor
+  endCursor: Cursor
+}
+
+type UserConnection {
+  totalCount: Int!
+  pageInfo: PageInfo!
+  edges: [UserEdge]
+}
+
+type UserEdge {
+  node: User
+  cursor: Cursor!
+}
+
+input UserOrder {
+  direction: OrderDirection!
+  field: UserOrderField
+}
+
+type Query {
+  users(
+    after: Cursor
+    first: Int
+    before: Cursor
+    last: Int
+    orderBy: UserOrder
+  ): UserConnection
+}

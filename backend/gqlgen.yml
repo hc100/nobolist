@@ -1,0 +1,21 @@
+schema:
+  - schema.graphql
+
+resolver:
+  # gqlgenに、スキーマファイルの隣にリゾルバを生成するように指示する
+  layout: follow-schema
+  dir: .
+
+# gqlgenは生成されたentパッケージ内のスキーマに含まれる型名を
+# 検索する。 一致すればそれを使い、そうでなければ新しいものを使う
+autobind:
+  - github.com/hc100/nobolist/backend/ent
+
+models:
+  ID:
+    model:
+      - github.com/99designs/gqlgen/graphql.IntID
+  Node:
+    model:
+      # ent.Noderは、Nodeテンプレートが生成する新しいインターフェースである
+      - github.com/hc100/nobolist/backend/ent.Noder

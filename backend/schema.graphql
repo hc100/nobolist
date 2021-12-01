@@ -4,7 +4,7 @@ enum OrderDirection {
 }
 
 enum UserOrderField {
-  AGE
+  EMAIL
   NAME
 }
 
@@ -14,7 +14,7 @@ interface Node {
 
 type User implements Node {
   id: ID!
-  age: Int!
+  email: String!
   name: String!
 }
 
@@ -51,4 +51,9 @@ type Query {
     last: Int
     orderBy: UserOrder
   ): UserConnection
+  existUserEmail(email: String!): Boolean!
+}
+
+type Mutation {
+  createUser(email: String!): User!
 }

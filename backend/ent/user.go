@@ -5,6 +5,7 @@ package ent
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"entgo.io/ent/dialect/sql"
 	"github.com/hc100/nobolist/backend/ent/user"
@@ -15,10 +16,22 @@ type User struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
-	// Age holds the value of the "age" field.
-	Age int `json:"age,omitempty"`
+	// Active holds the value of the "active" field.
+	Active bool `json:"active,omitempty"`
+	// Email holds the value of the "email" field.
+	Email string `json:"email,omitempty"`
+	// EmailAuthenticationKey holds the value of the "email_authentication_key" field.
+	EmailAuthenticationKey string `json:"email_authentication_key,omitempty"`
+	// EmailAuthenticationKeyCreatedAt holds the value of the "email_authentication_key_created_at" field.
+	EmailAuthenticationKeyCreatedAt time.Time `json:"email_authentication_key_created_at,omitempty"`
+	// EmailAuthenticationStatus holds the value of the "email_authentication_status" field.
+	EmailAuthenticationStatus bool `json:"email_authentication_status,omitempty"`
 	// Name holds the value of the "name" field.
 	Name string `json:"name,omitempty"`
+	// CreatedAt holds the value of the "created_at" field.
+	CreatedAt time.Time `json:"created_at,omitempty"`
+	// UpdatedAt holds the value of the "updated_at" field.
+	UpdatedAt time.Time `json:"updated_at,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -26,10 +39,14 @@ func (*User) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case user.FieldID, user.FieldAge:
+		case user.FieldActive, user.FieldEmailAuthenticationStatus:
+			values[i] = new(sql.NullBool)
+		case user.FieldID:
 			values[i] = new(sql.NullInt64)
-		case user.FieldName:
+		case user.FieldEmail, user.FieldEmailAuthenticationKey, user.FieldName:
 			values[i] = new(sql.NullString)
+		case user.FieldEmailAuthenticationKeyCreatedAt, user.FieldCreatedAt, user.FieldUpdatedAt:
+			values[i] = new(sql.NullTime)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type User", columns[i])
 		}
@@ -51,17 +68,53 @@ func (u *User) assignValues(columns []string, values []interface{}) error {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
 			u.ID = int(value.Int64)
-		case user.FieldAge:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field age", values[i])
+		case user.FieldActive:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field active", values[i])
 			} else if value.Valid {
-				u.Age = int(value.Int64)
+				u.Active = value.Bool
+			}
+		case user.FieldEmail:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field email", values[i])
+			} else if value.Valid {
+				u.Email = value.String
+			}
+		case user.FieldEmailAuthenticationKey:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field email_authentication_key", values[i])
+			} else if value.Valid {
+				u.EmailAuthenticationKey = value.String
+			}
+		case user.FieldEmailAuthenticationKeyCreatedAt:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field email_authentication_key_created_at", values[i])
+			} else if value.Valid {
+				u.EmailAuthenticationKeyCreatedAt = value.Time
+			}
+		case user.FieldEmailAuthenticationStatus:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field email_authentication_status", values[i])
+			} else if value.Valid {
+				u.EmailAuthenticationStatus = value.Bool
 			}
 		case user.FieldName:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field name", values[i])
 			} else if value.Valid {
 				u.Name = value.String
+			}
+		case user.FieldCreatedAt:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field created_at", values[i])
+			} else if value.Valid {
+				u.CreatedAt = value.Time
+			}
+		case user.FieldUpdatedAt:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field updated_at", values[i])
+			} else if value.Valid {
+				u.UpdatedAt = value.Time
 			}
 		}
 	}
@@ -91,10 +144,22 @@ func (u *User) String() string {
 	var builder strings.Builder
 	builder.WriteString("User(")
 	builder.WriteString(fmt.Sprintf("id=%v", u.ID))
-	builder.WriteString(", age=")
-	builder.WriteString(fmt.Sprintf("%v", u.Age))
+	builder.WriteString(", active=")
+	builder.WriteString(fmt.Sprintf("%v", u.Active))
+	builder.WriteString(", email=")
+	builder.WriteString(u.Email)
+	builder.WriteString(", email_authentication_key=")
+	builder.WriteString(u.EmailAuthenticationKey)
+	builder.WriteString(", email_authentication_key_created_at=")
+	builder.WriteString(u.EmailAuthenticationKeyCreatedAt.Format(time.ANSIC))
+	builder.WriteString(", email_authentication_status=")
+	builder.WriteString(fmt.Sprintf("%v", u.EmailAuthenticationStatus))
 	builder.WriteString(", name=")
 	builder.WriteString(u.Name)
+	builder.WriteString(", created_at=")
+	builder.WriteString(u.CreatedAt.Format(time.ANSIC))
+	builder.WriteString(", updated_at=")
+	builder.WriteString(u.UpdatedAt.Format(time.ANSIC))
 	builder.WriteByte(')')
 	return builder.String()
 }

@@ -426,13 +426,53 @@ func (u *UserQuery) Paginate(
 }
 
 var (
-	// UserOrderFieldAge orders User by age.
-	UserOrderFieldAge = &UserOrderField{
-		field: user.FieldAge,
+	// UserOrderFieldActive orders User by active.
+	UserOrderFieldActive = &UserOrderField{
+		field: user.FieldActive,
 		toCursor: func(u *User) Cursor {
 			return Cursor{
 				ID:    u.ID,
-				Value: u.Age,
+				Value: u.Active,
+			}
+		},
+	}
+	// UserOrderFieldEmail orders User by email.
+	UserOrderFieldEmail = &UserOrderField{
+		field: user.FieldEmail,
+		toCursor: func(u *User) Cursor {
+			return Cursor{
+				ID:    u.ID,
+				Value: u.Email,
+			}
+		},
+	}
+	// UserOrderFieldEmailAuthenticationKey orders User by email_authentication_key.
+	UserOrderFieldEmailAuthenticationKey = &UserOrderField{
+		field: user.FieldEmailAuthenticationKey,
+		toCursor: func(u *User) Cursor {
+			return Cursor{
+				ID:    u.ID,
+				Value: u.EmailAuthenticationKey,
+			}
+		},
+	}
+	// UserOrderFieldEmailAuthenticationKeyCreatedAt orders User by email_authentication_key_created_at.
+	UserOrderFieldEmailAuthenticationKeyCreatedAt = &UserOrderField{
+		field: user.FieldEmailAuthenticationKeyCreatedAt,
+		toCursor: func(u *User) Cursor {
+			return Cursor{
+				ID:    u.ID,
+				Value: u.EmailAuthenticationKeyCreatedAt,
+			}
+		},
+	}
+	// UserOrderFieldEmailAuthenticationStatus orders User by email_authentication_status.
+	UserOrderFieldEmailAuthenticationStatus = &UserOrderField{
+		field: user.FieldEmailAuthenticationStatus,
+		toCursor: func(u *User) Cursor {
+			return Cursor{
+				ID:    u.ID,
+				Value: u.EmailAuthenticationStatus,
 			}
 		},
 	}
@@ -446,16 +486,48 @@ var (
 			}
 		},
 	}
+	// UserOrderFieldCreatedAt orders User by created_at.
+	UserOrderFieldCreatedAt = &UserOrderField{
+		field: user.FieldCreatedAt,
+		toCursor: func(u *User) Cursor {
+			return Cursor{
+				ID:    u.ID,
+				Value: u.CreatedAt,
+			}
+		},
+	}
+	// UserOrderFieldUpdatedAt orders User by updated_at.
+	UserOrderFieldUpdatedAt = &UserOrderField{
+		field: user.FieldUpdatedAt,
+		toCursor: func(u *User) Cursor {
+			return Cursor{
+				ID:    u.ID,
+				Value: u.UpdatedAt,
+			}
+		},
+	}
 )
 
 // String implement fmt.Stringer interface.
 func (f UserOrderField) String() string {
 	var str string
 	switch f.field {
-	case user.FieldAge:
-		str = "AGE"
+	case user.FieldActive:
+		str = "ACTIVE"
+	case user.FieldEmail:
+		str = "EMAIL"
+	case user.FieldEmailAuthenticationKey:
+		str = "EMAIL_AUTHENTICATION_KEY"
+	case user.FieldEmailAuthenticationKeyCreatedAt:
+		str = "EMAIL_AUTHENTICATION_KEY_CREATED_AT"
+	case user.FieldEmailAuthenticationStatus:
+		str = "EMAIL_AUTHENTICATION_STATUS"
 	case user.FieldName:
 		str = "NAME"
+	case user.FieldCreatedAt:
+		str = "CREATED_AT"
+	case user.FieldUpdatedAt:
+		str = "UPDATED_AT"
 	}
 	return str
 }
@@ -472,10 +544,22 @@ func (f *UserOrderField) UnmarshalGQL(v interface{}) error {
 		return fmt.Errorf("UserOrderField %T must be a string", v)
 	}
 	switch str {
-	case "AGE":
-		*f = *UserOrderFieldAge
+	case "ACTIVE":
+		*f = *UserOrderFieldActive
+	case "EMAIL":
+		*f = *UserOrderFieldEmail
+	case "EMAIL_AUTHENTICATION_KEY":
+		*f = *UserOrderFieldEmailAuthenticationKey
+	case "EMAIL_AUTHENTICATION_KEY_CREATED_AT":
+		*f = *UserOrderFieldEmailAuthenticationKeyCreatedAt
+	case "EMAIL_AUTHENTICATION_STATUS":
+		*f = *UserOrderFieldEmailAuthenticationStatus
 	case "NAME":
 		*f = *UserOrderFieldName
+	case "CREATED_AT":
+		*f = *UserOrderFieldCreatedAt
+	case "UPDATED_AT":
+		*f = *UserOrderFieldUpdatedAt
 	default:
 		return fmt.Errorf("%s is not a valid UserOrderField", str)
 	}

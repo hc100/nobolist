@@ -50,24 +50,72 @@ func (u *User) Node(ctx context.Context) (node *Node, err error) {
 	node = &Node{
 		ID:     u.ID,
 		Type:   "User",
-		Fields: make([]*Field, 2),
+		Fields: make([]*Field, 8),
 		Edges:  make([]*Edge, 0),
 	}
 	var buf []byte
-	if buf, err = json.Marshal(u.Age); err != nil {
+	if buf, err = json.Marshal(u.Active); err != nil {
 		return nil, err
 	}
 	node.Fields[0] = &Field{
-		Type:  "int",
-		Name:  "age",
+		Type:  "bool",
+		Name:  "active",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(u.Email); err != nil {
+		return nil, err
+	}
+	node.Fields[1] = &Field{
+		Type:  "string",
+		Name:  "email",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(u.EmailAuthenticationKey); err != nil {
+		return nil, err
+	}
+	node.Fields[2] = &Field{
+		Type:  "string",
+		Name:  "email_authentication_key",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(u.EmailAuthenticationKeyCreatedAt); err != nil {
+		return nil, err
+	}
+	node.Fields[3] = &Field{
+		Type:  "time.Time",
+		Name:  "email_authentication_key_created_at",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(u.EmailAuthenticationStatus); err != nil {
+		return nil, err
+	}
+	node.Fields[4] = &Field{
+		Type:  "bool",
+		Name:  "email_authentication_status",
 		Value: string(buf),
 	}
 	if buf, err = json.Marshal(u.Name); err != nil {
 		return nil, err
 	}
-	node.Fields[1] = &Field{
+	node.Fields[5] = &Field{
 		Type:  "string",
 		Name:  "name",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(u.CreatedAt); err != nil {
+		return nil, err
+	}
+	node.Fields[6] = &Field{
+		Type:  "time.Time",
+		Name:  "created_at",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(u.UpdatedAt); err != nil {
+		return nil, err
+	}
+	node.Fields[7] = &Field{
+		Type:  "time.Time",
+		Name:  "updated_at",
 		Value: string(buf),
 	}
 	return node, nil

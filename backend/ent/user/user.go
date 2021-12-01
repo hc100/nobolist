@@ -2,15 +2,31 @@
 
 package user
 
+import (
+	"time"
+)
+
 const (
 	// Label holds the string label denoting the user type in the database.
 	Label = "user"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
-	// FieldAge holds the string denoting the age field in the database.
-	FieldAge = "age"
+	// FieldActive holds the string denoting the active field in the database.
+	FieldActive = "active"
+	// FieldEmail holds the string denoting the email field in the database.
+	FieldEmail = "email"
+	// FieldEmailAuthenticationKey holds the string denoting the email_authentication_key field in the database.
+	FieldEmailAuthenticationKey = "email_authentication_key"
+	// FieldEmailAuthenticationKeyCreatedAt holds the string denoting the email_authentication_key_created_at field in the database.
+	FieldEmailAuthenticationKeyCreatedAt = "email_authentication_key_created_at"
+	// FieldEmailAuthenticationStatus holds the string denoting the email_authentication_status field in the database.
+	FieldEmailAuthenticationStatus = "email_authentication_status"
 	// FieldName holds the string denoting the name field in the database.
 	FieldName = "name"
+	// FieldCreatedAt holds the string denoting the created_at field in the database.
+	FieldCreatedAt = "created_at"
+	// FieldUpdatedAt holds the string denoting the updated_at field in the database.
+	FieldUpdatedAt = "updated_at"
 	// Table holds the table name of the user in the database.
 	Table = "users"
 )
@@ -18,8 +34,14 @@ const (
 // Columns holds all SQL columns for user fields.
 var Columns = []string{
 	FieldID,
-	FieldAge,
+	FieldActive,
+	FieldEmail,
+	FieldEmailAuthenticationKey,
+	FieldEmailAuthenticationKeyCreatedAt,
+	FieldEmailAuthenticationStatus,
 	FieldName,
+	FieldCreatedAt,
+	FieldUpdatedAt,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -33,8 +55,14 @@ func ValidColumn(column string) bool {
 }
 
 var (
-	// AgeValidator is a validator for the "age" field. It is called by the builders before save.
-	AgeValidator func(int) error
+	// DefaultActive holds the default value on creation for the "active" field.
+	DefaultActive bool
+	// DefaultEmailAuthenticationStatus holds the default value on creation for the "email_authentication_status" field.
+	DefaultEmailAuthenticationStatus bool
 	// DefaultName holds the default value on creation for the "name" field.
 	DefaultName string
+	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
+	DefaultCreatedAt func() time.Time
+	// DefaultUpdatedAt holds the default value on creation for the "updated_at" field.
+	DefaultUpdatedAt func() time.Time
 )

@@ -3,6 +3,8 @@
 package ent
 
 import (
+	"time"
+
 	"github.com/hc100/nobolist/backend/ent/schema"
 	"github.com/hc100/nobolist/backend/ent/user"
 )
@@ -13,12 +15,24 @@ import (
 func init() {
 	userFields := schema.User{}.Fields()
 	_ = userFields
-	// userDescAge is the schema descriptor for age field.
-	userDescAge := userFields[0].Descriptor()
-	// user.AgeValidator is a validator for the "age" field. It is called by the builders before save.
-	user.AgeValidator = userDescAge.Validators[0].(func(int) error)
+	// userDescActive is the schema descriptor for active field.
+	userDescActive := userFields[0].Descriptor()
+	// user.DefaultActive holds the default value on creation for the active field.
+	user.DefaultActive = userDescActive.Default.(bool)
+	// userDescEmailAuthenticationStatus is the schema descriptor for email_authentication_status field.
+	userDescEmailAuthenticationStatus := userFields[4].Descriptor()
+	// user.DefaultEmailAuthenticationStatus holds the default value on creation for the email_authentication_status field.
+	user.DefaultEmailAuthenticationStatus = userDescEmailAuthenticationStatus.Default.(bool)
 	// userDescName is the schema descriptor for name field.
-	userDescName := userFields[1].Descriptor()
+	userDescName := userFields[5].Descriptor()
 	// user.DefaultName holds the default value on creation for the name field.
 	user.DefaultName = userDescName.Default.(string)
+	// userDescCreatedAt is the schema descriptor for created_at field.
+	userDescCreatedAt := userFields[6].Descriptor()
+	// user.DefaultCreatedAt holds the default value on creation for the created_at field.
+	user.DefaultCreatedAt = userDescCreatedAt.Default.(func() time.Time)
+	// userDescUpdatedAt is the schema descriptor for updated_at field.
+	userDescUpdatedAt := userFields[7].Descriptor()
+	// user.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	user.DefaultUpdatedAt = userDescUpdatedAt.Default.(func() time.Time)
 }

@@ -43,6 +43,12 @@ input UserOrder {
   field: UserOrderField
 }
 
+input RegisterUserInput {
+  key: String!
+  name: String!
+  password: String!
+}
+
 type Query {
   users(
     after: Cursor
@@ -52,8 +58,10 @@ type Query {
     orderBy: UserOrder
   ): UserConnection
   existUserEmail(email: String!): Boolean!
+  isValidRegistrationKey(key: String!): User!
 }
 
 type Mutation {
   createUser(email: String!): User!
+  registerUser(input: RegisterUserInput!): User!
 }

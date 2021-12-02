@@ -486,6 +486,16 @@ var (
 			}
 		},
 	}
+	// UserOrderFieldPassword orders User by password.
+	UserOrderFieldPassword = &UserOrderField{
+		field: user.FieldPassword,
+		toCursor: func(u *User) Cursor {
+			return Cursor{
+				ID:    u.ID,
+				Value: u.Password,
+			}
+		},
+	}
 	// UserOrderFieldCreatedAt orders User by created_at.
 	UserOrderFieldCreatedAt = &UserOrderField{
 		field: user.FieldCreatedAt,
@@ -524,6 +534,8 @@ func (f UserOrderField) String() string {
 		str = "EMAIL_AUTHENTICATION_STATUS"
 	case user.FieldName:
 		str = "NAME"
+	case user.FieldPassword:
+		str = "PASSWORD"
 	case user.FieldCreatedAt:
 		str = "CREATED_AT"
 	case user.FieldUpdatedAt:
@@ -556,6 +568,8 @@ func (f *UserOrderField) UnmarshalGQL(v interface{}) error {
 		*f = *UserOrderFieldEmailAuthenticationStatus
 	case "NAME":
 		*f = *UserOrderFieldName
+	case "PASSWORD":
+		*f = *UserOrderFieldPassword
 	case "CREATED_AT":
 		*f = *UserOrderFieldCreatedAt
 	case "UPDATED_AT":

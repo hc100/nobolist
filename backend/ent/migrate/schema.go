@@ -17,6 +17,7 @@ var (
 		{Name: "email_authentication_key_created_at", Type: field.TypeTime},
 		{Name: "email_authentication_status", Type: field.TypeBool, Default: false},
 		{Name: "name", Type: field.TypeString, Default: ""},
+		{Name: "password", Type: field.TypeString, Default: ""},
 		{Name: "created_at", Type: field.TypeTime},
 		{Name: "updated_at", Type: field.TypeTime},
 	}

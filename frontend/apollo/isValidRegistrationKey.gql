@@ -1,0 +1,5 @@
+query isValidRegistrationKey($key: String!){
+    isValidRegistrationKey(key: $key) {
+        email
+    }
+}

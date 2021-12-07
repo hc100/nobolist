@@ -44,6 +44,13 @@
       </div>
       <div>
         <a
+          v-if="isAuthenticated"
+          href="/logout/"
+          class="inline-block text-sm px-4 py-2 leading-none border rounded text-black border-black hover:border-transparent hover:text-teal-500 hover:bg-black mt-4 lg:mt-0"
+          >ログアウト</a
+        >
+        <a
+          v-else
           href="/login/"
           class="inline-block text-sm px-4 py-2 leading-none border rounded text-black border-black hover:border-transparent hover:text-teal-500 hover:bg-black mt-4 lg:mt-0"
           >ログイン</a
@@ -59,10 +66,13 @@ export default {
   props: {},
   data: () => ({
     showMenu: true,
+    isAuthenticated: false,
   }),
   apollo: {},
   watch: {},
-  mounted() {},
+  mounted() {
+    this.isAuthenticated = !!this.$apolloHelpers.getToken()
+  },
   created() {},
   methods: {
     toggleMenu() {

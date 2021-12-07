@@ -60,7 +60,6 @@
 
 <script>
 import Login from '~/apollo/login'
-import { AUTH_TOKEN, REFRESH_TOKEN, ROLE } from '@/constants.js'
 
 export default {
   apollo: {},
@@ -107,26 +106,23 @@ export default {
         return false
       }
 
-      await this.$apollo
-        .mutate({
-          mutation: Login,
-          variables: {
-            email: this.email,
-            password: this.password,
-          },
-          update: (store, data) => {
-            if (typeof localStorage !== 'undefined') {
-              localStorage.setItem(AUTH_TOKEN, data.data.login.accessToken)
-              localStorage.setItem(REFRESH_TOKEN, data.data.login.refreshToken)
-              localStorage.setItem(ROLE, data.data.login.role)
-            }
-            this.$router.push({ name: 'dashboard' })
-          },
-        })
-        .catch((err) => {
-          console.log('Login Error')
-          err.graphQLErrors.map(({ message }, i) => this.errors.push(message))
-        })
+      const credentials = {
+        email: this.email,
+        password: this.password,
+      }
+
+      try {
+        const res = await this.$apollo
+          .mutate({
+            mutation: Login,
+            variables: credentials,
+          })
+          .then(({ data }) => data && data.login)
+        await this.$apolloHelpers.onLogin(res.accessToken)
+        this.$router.push({ name: 'dashboard' })
+      } catch (e) {
+        console.error(e)
+      }
     },
   },
 }

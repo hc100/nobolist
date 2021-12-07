@@ -5,10 +5,12 @@ package backend
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/hc100/nobolist/backend/ent"
 	"github.com/hc100/nobolist/backend/ent/user"
+	"github.com/hc100/nobolist/backend/jwt"
 	"github.com/hc100/nobolist/backend/lib/util/sendmail"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -91,6 +93,46 @@ func (r *mutationResolver) RegisterUser(ctx context.Context, input RegisterUserI
 	return u, nil
 }
 
+func (r *mutationResolver) Login(ctx context.Context, email string, password string) (*Token, error) {
+	u, err := r.client.User.
+		Query().
+		Where(
+			user.EmailEQ(email),
+			user.ActiveEQ(true),
+		).
+		First(ctx)
+	if err != nil {
+		if ent.IsNotFound(err) {
+			return nil, fmt.Errorf("メールアドレスが登録されていません")
+		} else {
+			return nil, err
+		}
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(password))
+	if err != nil {
+		return nil, fmt.Errorf("パスワードが間違っています")
+	}
+
+	at, err := jwt.CreateAccessToken(u.Email)
+	if err != nil {
+		return nil, err
+	}
+
+	rt, err := jwt.CreateRefreshToken(u.Email)
+	if err != nil {
+		return nil, err
+	}
+
+	token := Token{
+		AccessToken:  at,
+		RefreshToken: rt,
+		Role:         u.Role,
+	}
+
+	return &token, nil
+}
+
 func (r *queryResolver) Users(ctx context.Context, after *ent.Cursor, first *int, before *ent.Cursor, last *int, orderBy *ent.UserOrder) (*ent.UserConnection, error) {
 	return r.client.User.Query().
 		Paginate(ctx, after, first, before, last,
@@ -141,10 +183,3 @@ func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
 
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
-
-// !!! WARNING !!!
-// The code below was going to be deleted when updating resolvers. It has been copied here so you have
-// one last chance to move it out of harms way if you want. There are two reasons this happens:
-//  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
-//    it when you're done.
-//  - You have helper methods in this file. Move them out to keep these resolver files clean.

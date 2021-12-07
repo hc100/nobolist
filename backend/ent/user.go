@@ -30,6 +30,8 @@ type User struct {
 	Name string `json:"name,omitempty"`
 	// Password holds the value of the "password" field.
 	Password string `json:"password,omitempty"`
+	// Role holds the value of the "role" field.
+	Role int `json:"role,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// UpdatedAt holds the value of the "updated_at" field.
@@ -43,7 +45,7 @@ func (*User) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case user.FieldActive, user.FieldEmailAuthenticationStatus:
 			values[i] = new(sql.NullBool)
-		case user.FieldID:
+		case user.FieldID, user.FieldRole:
 			values[i] = new(sql.NullInt64)
 		case user.FieldEmail, user.FieldEmailAuthenticationKey, user.FieldName, user.FieldPassword:
 			values[i] = new(sql.NullString)
@@ -112,6 +114,12 @@ func (u *User) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				u.Password = value.String
 			}
+		case user.FieldRole:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field role", values[i])
+			} else if value.Valid {
+				u.Role = int(value.Int64)
+			}
 		case user.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field created_at", values[i])
@@ -166,6 +174,8 @@ func (u *User) String() string {
 	builder.WriteString(u.Name)
 	builder.WriteString(", password=")
 	builder.WriteString(u.Password)
+	builder.WriteString(", role=")
+	builder.WriteString(fmt.Sprintf("%v", u.Role))
 	builder.WriteString(", created_at=")
 	builder.WriteString(u.CreatedAt.Format(time.ANSIC))
 	builder.WriteString(", updated_at=")

@@ -7,3 +7,9 @@ type RegisterUserInput struct {
 	Name     string `json:"name"`
 	Password string `json:"password"`
 }
+
+type Token struct {
+	AccessToken  string `json:"accessToken"`
+	RefreshToken string `json:"refreshToken"`
+	Role         int    `json:"role"`
+}

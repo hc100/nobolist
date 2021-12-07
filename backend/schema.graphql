@@ -38,6 +38,12 @@ type UserEdge {
   cursor: Cursor!
 }
 
+type Token {
+  accessToken: String!
+  refreshToken: String!
+  role: Int!
+}
+
 input UserOrder {
   direction: OrderDirection!
   field: UserOrderField
@@ -64,4 +70,5 @@ type Query {
 type Mutation {
   createUser(email: String!): User!
   registerUser(input: RegisterUserInput!): User!
+  login(email: String!, password: String!): Token!
 }

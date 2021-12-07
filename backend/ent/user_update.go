@@ -101,6 +101,27 @@ func (uu *UserUpdate) SetNillablePassword(s *string) *UserUpdate {
 	return uu
 }
 
+// SetRole sets the "role" field.
+func (uu *UserUpdate) SetRole(i int) *UserUpdate {
+	uu.mutation.ResetRole()
+	uu.mutation.SetRole(i)
+	return uu
+}
+
+// SetNillableRole sets the "role" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableRole(i *int) *UserUpdate {
+	if i != nil {
+		uu.SetRole(*i)
+	}
+	return uu
+}
+
+// AddRole adds i to the "role" field.
+func (uu *UserUpdate) AddRole(i int) *UserUpdate {
+	uu.mutation.AddRole(i)
+	return uu
+}
+
 // SetCreatedAt sets the "created_at" field.
 func (uu *UserUpdate) SetCreatedAt(t time.Time) *UserUpdate {
 	uu.mutation.SetCreatedAt(t)
@@ -255,6 +276,20 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: user.FieldPassword,
 		})
 	}
+	if value, ok := uu.mutation.Role(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: user.FieldRole,
+		})
+	}
+	if value, ok := uu.mutation.AddedRole(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: user.FieldRole,
+		})
+	}
 	if value, ok := uu.mutation.CreatedAt(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
@@ -359,6 +394,27 @@ func (uuo *UserUpdateOne) SetNillablePassword(s *string) *UserUpdateOne {
 	if s != nil {
 		uuo.SetPassword(*s)
 	}
+	return uuo
+}
+
+// SetRole sets the "role" field.
+func (uuo *UserUpdateOne) SetRole(i int) *UserUpdateOne {
+	uuo.mutation.ResetRole()
+	uuo.mutation.SetRole(i)
+	return uuo
+}
+
+// SetNillableRole sets the "role" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableRole(i *int) *UserUpdateOne {
+	if i != nil {
+		uuo.SetRole(*i)
+	}
+	return uuo
+}
+
+// AddRole adds i to the "role" field.
+func (uuo *UserUpdateOne) AddRole(i int) *UserUpdateOne {
+	uuo.mutation.AddRole(i)
 	return uuo
 }
 
@@ -538,6 +594,20 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			Type:   field.TypeString,
 			Value:  value,
 			Column: user.FieldPassword,
+		})
+	}
+	if value, ok := uuo.mutation.Role(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: user.FieldRole,
+		})
+	}
+	if value, ok := uuo.mutation.AddedRole(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: user.FieldRole,
 		})
 	}
 	if value, ok := uuo.mutation.CreatedAt(); ok {

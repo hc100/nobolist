@@ -50,6 +50,11 @@ func (User) Fields() []ent.Field {
 			Annotations(
 				entgql.OrderField("PASSWORD"),
 			),
+		field.Int("role").
+			Default(0).
+			Annotations(
+				entgql.OrderField("ROLE"),
+			),
 		field.Time("created_at").
 			Default(time.Now).
 			Annotations(

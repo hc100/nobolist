@@ -25,6 +25,8 @@ const (
 	FieldName = "name"
 	// FieldPassword holds the string denoting the password field in the database.
 	FieldPassword = "password"
+	// FieldRole holds the string denoting the role field in the database.
+	FieldRole = "role"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
 	FieldCreatedAt = "created_at"
 	// FieldUpdatedAt holds the string denoting the updated_at field in the database.
@@ -43,6 +45,7 @@ var Columns = []string{
 	FieldEmailAuthenticationStatus,
 	FieldName,
 	FieldPassword,
+	FieldRole,
 	FieldCreatedAt,
 	FieldUpdatedAt,
 }
@@ -66,6 +69,8 @@ var (
 	DefaultName string
 	// DefaultPassword holds the default value on creation for the "password" field.
 	DefaultPassword string
+	// DefaultRole holds the default value on creation for the "role" field.
+	DefaultRole int
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
 	DefaultCreatedAt func() time.Time
 	// DefaultUpdatedAt holds the default value on creation for the "updated_at" field.

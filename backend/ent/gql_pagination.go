@@ -496,6 +496,16 @@ var (
 			}
 		},
 	}
+	// UserOrderFieldRole orders User by role.
+	UserOrderFieldRole = &UserOrderField{
+		field: user.FieldRole,
+		toCursor: func(u *User) Cursor {
+			return Cursor{
+				ID:    u.ID,
+				Value: u.Role,
+			}
+		},
+	}
 	// UserOrderFieldCreatedAt orders User by created_at.
 	UserOrderFieldCreatedAt = &UserOrderField{
 		field: user.FieldCreatedAt,
@@ -536,6 +546,8 @@ func (f UserOrderField) String() string {
 		str = "NAME"
 	case user.FieldPassword:
 		str = "PASSWORD"
+	case user.FieldRole:
+		str = "ROLE"
 	case user.FieldCreatedAt:
 		str = "CREATED_AT"
 	case user.FieldUpdatedAt:
@@ -570,6 +582,8 @@ func (f *UserOrderField) UnmarshalGQL(v interface{}) error {
 		*f = *UserOrderFieldName
 	case "PASSWORD":
 		*f = *UserOrderFieldPassword
+	case "ROLE":
+		*f = *UserOrderFieldRole
 	case "CREATED_AT":
 		*f = *UserOrderFieldCreatedAt
 	case "UPDATED_AT":

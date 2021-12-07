@@ -27,7 +27,7 @@
           href="#responsive-header"
           class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-black mr-4"
         >
-          Docs
+          課題検索
         </a>
         <a
           href="#responsive-header"
@@ -36,6 +36,7 @@
           Examples
         </a>
         <a
+          v-if="!isAuthenticated"
           href="/register/"
           class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-black"
         >

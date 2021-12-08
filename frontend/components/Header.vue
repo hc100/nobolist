@@ -68,7 +68,7 @@ export default {
   name: 'Header',
   props: {},
   data: () => ({
-    showMenu: true,
+    showMenu: false,
     isAuthenticated: false,
   }),
   apollo: {},

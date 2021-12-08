@@ -108,6 +108,18 @@ func (uc *UserCreate) SetNillableRole(i *int) *UserCreate {
 	return uc
 }
 
+// SetResetPasswordKey sets the "reset_password_key" field.
+func (uc *UserCreate) SetResetPasswordKey(s string) *UserCreate {
+	uc.mutation.SetResetPasswordKey(s)
+	return uc
+}
+
+// SetResetPasswordKeyCreatedAt sets the "reset_password_key_created_at" field.
+func (uc *UserCreate) SetResetPasswordKeyCreatedAt(t time.Time) *UserCreate {
+	uc.mutation.SetResetPasswordKeyCreatedAt(t)
+	return uc
+}
+
 // SetCreatedAt sets the "created_at" field.
 func (uc *UserCreate) SetCreatedAt(t time.Time) *UserCreate {
 	uc.mutation.SetCreatedAt(t)
@@ -263,6 +275,12 @@ func (uc *UserCreate) check() error {
 	if _, ok := uc.mutation.Role(); !ok {
 		return &ValidationError{Name: "role", err: errors.New(`ent: missing required field "role"`)}
 	}
+	if _, ok := uc.mutation.ResetPasswordKey(); !ok {
+		return &ValidationError{Name: "reset_password_key", err: errors.New(`ent: missing required field "reset_password_key"`)}
+	}
+	if _, ok := uc.mutation.ResetPasswordKeyCreatedAt(); !ok {
+		return &ValidationError{Name: "reset_password_key_created_at", err: errors.New(`ent: missing required field "reset_password_key_created_at"`)}
+	}
 	if _, ok := uc.mutation.CreatedAt(); !ok {
 		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "created_at"`)}
 	}
@@ -359,6 +377,22 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 			Column: user.FieldRole,
 		})
 		_node.Role = value
+	}
+	if value, ok := uc.mutation.ResetPasswordKey(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: user.FieldResetPasswordKey,
+		})
+		_node.ResetPasswordKey = value
+	}
+	if value, ok := uc.mutation.ResetPasswordKeyCreatedAt(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: user.FieldResetPasswordKeyCreatedAt,
+		})
+		_node.ResetPasswordKeyCreatedAt = value
 	}
 	if value, ok := uc.mutation.CreatedAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{

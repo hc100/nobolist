@@ -19,6 +19,8 @@ var (
 		{Name: "name", Type: field.TypeString, Default: ""},
 		{Name: "password", Type: field.TypeString, Default: ""},
 		{Name: "role", Type: field.TypeInt, Default: 0},
+		{Name: "reset_password_key", Type: field.TypeString, Unique: true},
+		{Name: "reset_password_key_created_at", Type: field.TypeTime},
 		{Name: "created_at", Type: field.TypeTime},
 		{Name: "updated_at", Type: field.TypeTime},
 	}

@@ -1,7 +1,7 @@
 <template>
   <div>
     <Header />
-    <main>
+    <main class="pl-8">
       <div class="w-full max-w-xs">
         <div class="bg-green-200 rounded px-6 pt-6 pb-6 mb-4">ログイン</div>
       </div>
@@ -23,7 +23,7 @@
               v-model="email"
               class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               type="text"
-              placeholder="climber@gmail.com"
+              placeholder="climber@nobolist.jp"
               required
             />
           </div>
@@ -51,6 +51,16 @@
             >
               ログイン
             </button>
+          </div>
+
+          <div class="mt-4">
+            <a class="underline" href="/reset_password/"
+              >パスワードを忘れた方はこちら</a
+            >
+          </div>
+
+          <div class="mt-4">
+            <a class="underline" href="/register/">新規会員登録はこちら</a>
           </div>
         </form>
       </div>

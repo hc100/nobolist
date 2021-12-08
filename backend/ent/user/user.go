@@ -27,6 +27,10 @@ const (
 	FieldPassword = "password"
 	// FieldRole holds the string denoting the role field in the database.
 	FieldRole = "role"
+	// FieldResetPasswordKey holds the string denoting the reset_password_key field in the database.
+	FieldResetPasswordKey = "reset_password_key"
+	// FieldResetPasswordKeyCreatedAt holds the string denoting the reset_password_key_created_at field in the database.
+	FieldResetPasswordKeyCreatedAt = "reset_password_key_created_at"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
 	FieldCreatedAt = "created_at"
 	// FieldUpdatedAt holds the string denoting the updated_at field in the database.
@@ -46,6 +50,8 @@ var Columns = []string{
 	FieldName,
 	FieldPassword,
 	FieldRole,
+	FieldResetPasswordKey,
+	FieldResetPasswordKeyCreatedAt,
 	FieldCreatedAt,
 	FieldUpdatedAt,
 }

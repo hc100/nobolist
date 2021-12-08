@@ -1,7 +1,9 @@
 <template>
   <nav class="flex items-center justify-between flex-wrap bg-teal-500 p-6">
     <div class="flex items-center flex-shrink-0 text-black mr-6">
-      <span class="font-semibold text-xl tracking-tight">ﾉﾎﾞﾘｽﾄ</span>
+      <span class="font-semibold text-xl tracking-tight"
+        ><a href="/">ﾉﾎﾞﾘｽﾄ</a></span
+      >
     </div>
     <div class="block lg:hidden">
       <button
@@ -53,7 +55,7 @@
         <a
           v-else
           href="/login/"
-          class="inline-block text-sm px-4 py-2 leading-none border rounded text-black border-black hover:border-transparent hover:text-teal-500 hover:bg-black mt-4 lg:mt-0"
+          class="inline-block text-sm px-4 py-2 leading-none border rounded text-black border-black hover:border-transparent hover:text-white hover:bg-black mt-4 lg:mt-0"
           >ログイン</a
         >
       </div>

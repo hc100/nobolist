@@ -148,6 +148,20 @@ func Role(v int) predicate.User {
 	})
 }
 
+// ResetPasswordKey applies equality check predicate on the "reset_password_key" field. It's identical to ResetPasswordKeyEQ.
+func ResetPasswordKey(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldResetPasswordKey), v))
+	})
+}
+
+// ResetPasswordKeyCreatedAt applies equality check predicate on the "reset_password_key_created_at" field. It's identical to ResetPasswordKeyCreatedAtEQ.
+func ResetPasswordKeyCreatedAt(v time.Time) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldResetPasswordKeyCreatedAt), v))
+	})
+}
+
 // CreatedAt applies equality check predicate on the "created_at" field. It's identical to CreatedAtEQ.
 func CreatedAt(v time.Time) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
@@ -783,6 +797,193 @@ func RoleLT(v int) predicate.User {
 func RoleLTE(v int) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldRole), v))
+	})
+}
+
+// ResetPasswordKeyEQ applies the EQ predicate on the "reset_password_key" field.
+func ResetPasswordKeyEQ(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldResetPasswordKey), v))
+	})
+}
+
+// ResetPasswordKeyNEQ applies the NEQ predicate on the "reset_password_key" field.
+func ResetPasswordKeyNEQ(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldResetPasswordKey), v))
+	})
+}
+
+// ResetPasswordKeyIn applies the In predicate on the "reset_password_key" field.
+func ResetPasswordKeyIn(vs ...string) predicate.User {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.User(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldResetPasswordKey), v...))
+	})
+}
+
+// ResetPasswordKeyNotIn applies the NotIn predicate on the "reset_password_key" field.
+func ResetPasswordKeyNotIn(vs ...string) predicate.User {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.User(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldResetPasswordKey), v...))
+	})
+}
+
+// ResetPasswordKeyGT applies the GT predicate on the "reset_password_key" field.
+func ResetPasswordKeyGT(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldResetPasswordKey), v))
+	})
+}
+
+// ResetPasswordKeyGTE applies the GTE predicate on the "reset_password_key" field.
+func ResetPasswordKeyGTE(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldResetPasswordKey), v))
+	})
+}
+
+// ResetPasswordKeyLT applies the LT predicate on the "reset_password_key" field.
+func ResetPasswordKeyLT(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldResetPasswordKey), v))
+	})
+}
+
+// ResetPasswordKeyLTE applies the LTE predicate on the "reset_password_key" field.
+func ResetPasswordKeyLTE(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldResetPasswordKey), v))
+	})
+}
+
+// ResetPasswordKeyContains applies the Contains predicate on the "reset_password_key" field.
+func ResetPasswordKeyContains(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldResetPasswordKey), v))
+	})
+}
+
+// ResetPasswordKeyHasPrefix applies the HasPrefix predicate on the "reset_password_key" field.
+func ResetPasswordKeyHasPrefix(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldResetPasswordKey), v))
+	})
+}
+
+// ResetPasswordKeyHasSuffix applies the HasSuffix predicate on the "reset_password_key" field.
+func ResetPasswordKeyHasSuffix(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldResetPasswordKey), v))
+	})
+}
+
+// ResetPasswordKeyEqualFold applies the EqualFold predicate on the "reset_password_key" field.
+func ResetPasswordKeyEqualFold(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldResetPasswordKey), v))
+	})
+}
+
+// ResetPasswordKeyContainsFold applies the ContainsFold predicate on the "reset_password_key" field.
+func ResetPasswordKeyContainsFold(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldResetPasswordKey), v))
+	})
+}
+
+// ResetPasswordKeyCreatedAtEQ applies the EQ predicate on the "reset_password_key_created_at" field.
+func ResetPasswordKeyCreatedAtEQ(v time.Time) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldResetPasswordKeyCreatedAt), v))
+	})
+}
+
+// ResetPasswordKeyCreatedAtNEQ applies the NEQ predicate on the "reset_password_key_created_at" field.
+func ResetPasswordKeyCreatedAtNEQ(v time.Time) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldResetPasswordKeyCreatedAt), v))
+	})
+}
+
+// ResetPasswordKeyCreatedAtIn applies the In predicate on the "reset_password_key_created_at" field.
+func ResetPasswordKeyCreatedAtIn(vs ...time.Time) predicate.User {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.User(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldResetPasswordKeyCreatedAt), v...))
+	})
+}
+
+// ResetPasswordKeyCreatedAtNotIn applies the NotIn predicate on the "reset_password_key_created_at" field.
+func ResetPasswordKeyCreatedAtNotIn(vs ...time.Time) predicate.User {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.User(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldResetPasswordKeyCreatedAt), v...))
+	})
+}
+
+// ResetPasswordKeyCreatedAtGT applies the GT predicate on the "reset_password_key_created_at" field.
+func ResetPasswordKeyCreatedAtGT(v time.Time) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldResetPasswordKeyCreatedAt), v))
+	})
+}
+
+// ResetPasswordKeyCreatedAtGTE applies the GTE predicate on the "reset_password_key_created_at" field.
+func ResetPasswordKeyCreatedAtGTE(v time.Time) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldResetPasswordKeyCreatedAt), v))
+	})
+}
+
+// ResetPasswordKeyCreatedAtLT applies the LT predicate on the "reset_password_key_created_at" field.
+func ResetPasswordKeyCreatedAtLT(v time.Time) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldResetPasswordKeyCreatedAt), v))
+	})
+}
+
+// ResetPasswordKeyCreatedAtLTE applies the LTE predicate on the "reset_password_key_created_at" field.
+func ResetPasswordKeyCreatedAtLTE(v time.Time) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldResetPasswordKeyCreatedAt), v))
 	})
 }
 

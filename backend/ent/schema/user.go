@@ -27,34 +27,22 @@ func (User) Fields() []ent.Field {
 				entgql.OrderField("EMAIL"),
 			),
 		field.String("email_authentication_key").
-			Unique().
-			Annotations(
-				entgql.OrderField("EMAIL_AUTHENTICATION_KEY"),
-			),
-		field.Time("email_authentication_key_created_at").
-			Annotations(
-				entgql.OrderField("EMAIL_AUTHENTICATION_KEY_CREATED_AT"),
-			),
+			Unique(),
+		field.Time("email_authentication_key_created_at"),
 		field.Bool("email_authentication_status").
-			Default(false).
-			Annotations(
-				entgql.OrderField("EMAIL_AUTHENTICATION_STATUS"),
-			),
+			Default(false),
 		field.String("name").
 			Default("").
 			Annotations(
 				entgql.OrderField("NAME"),
 			),
 		field.String("password").
-			Default("").
-			Annotations(
-				entgql.OrderField("PASSWORD"),
-			),
+			Default(""),
 		field.Int("role").
-			Default(0).
-			Annotations(
-				entgql.OrderField("ROLE"),
-			),
+			Default(0),
+		field.String("reset_password_key").
+			Unique(),
+		field.Time("reset_password_key_created_at"),
 		field.Time("created_at").
 			Default(time.Now).
 			Annotations(

@@ -5,7 +5,7 @@
       <div v-if="mode === MODE_INPUT">
         <div class="w-full max-w-xs">
           <div class="bg-green-200 rounded px-6 pt-6 pb-6 mb-4">
-            新規会員登録 入力
+            パスワード再設定 入力
           </div>
         </div>
         <div class="w-full max-w-xs">
@@ -17,26 +17,9 @@
             <div class="mb-4">
               <label
                 class="block text-gray-700 text-sm font-bold mb-2"
-                for="name"
-              >
-                名前（表示用）
-              </label>
-              <input
-                id="name"
-                v-model="name"
-                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                type="text"
-                placeholder="名無しのクライマー"
-                required
-              />
-            </div>
-
-            <div class="mb-4">
-              <label
-                class="block text-gray-700 text-sm font-bold mb-2"
                 for="password"
               >
-                パスワード
+                新しいパスワード
               </label>
               <input
                 id="password"
@@ -53,7 +36,7 @@
                 type="button"
                 @click="onSubmit"
               >
-                登録する
+                設定する
               </button>
             </div>
           </form>
@@ -63,7 +46,7 @@
       <div v-if="mode === MODE_COMPLETE">
         <div class="w-full max-w-xs">
           <div class="bg-green-200 rounded px-6 pt-6 pb-6 mb-4">
-            新規会員登録 完了
+            パスワード再設定 完了
           </div>
         </div>
       </div>
@@ -72,8 +55,8 @@
 </template>
 
 <script>
-import IsValidRegistrationKey from '~/apollo/isValidRegistrationKey'
-import RegisterUser from '~/apollo/registerUser'
+import IsValidResetPasswordKey from '~/apollo/isValidResetPasswordKey'
+import ResetPassword from '~/apollo/resetPassword'
 import { isValidPassword } from '~/utils/validators.js'
 
 const MODE_INPUT = 'Input'
@@ -85,15 +68,11 @@ export default {
     try {
       await app.apolloProvider.defaultClient
         .query({
-          query: IsValidRegistrationKey,
+          query: IsValidResetPasswordKey,
           variables: { key: route.query.key },
         })
         .then(({ data }) => {
-          store.commit(
-            'user_registration/setEmail',
-            data.isValidRegistrationKey.email
-          )
-          store.commit('user_registration/setKey', route.query.key)
+          store.commit('reset_password/setKey', route.query.key)
         })
     } catch (e) {
       console.log(e)
@@ -117,7 +96,7 @@ export default {
   },
   head() {
     return {
-      title: '会員登録',
+      title: 'パスワード再設定',
     }
   },
   computed: {},
@@ -125,8 +104,7 @@ export default {
   beforeMount() {},
   mounted() {
     this.mode = MODE_INPUT
-    this.email = this.$store.state.user_registration.email
-    this.key = this.$store.state.user_registration.key
+    this.key = this.$store.state.reset_password.key
   },
   created() {},
   methods: {
@@ -137,13 +115,6 @@ export default {
 
       if (this.password !== null) {
         this.password = this.password.trim()
-      }
-      if (this.name !== null) {
-        this.name = this.name.trim()
-      }
-
-      if (!this.name) {
-        this.errors.push('名前を入力してください。')
       }
 
       if (!this.password) {
@@ -161,13 +132,12 @@ export default {
       try {
         const input = {
           key: this.key,
-          name: this.name,
           password: this.password,
         }
         await this.$apollo
           .mutate({
-            mutation: RegisterUser,
-            variables: { input },
+            mutation: ResetPassword,
+            variables: input,
           })
           .then(({ data }) => {
             this.submitting = false

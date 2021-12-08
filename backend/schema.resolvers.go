@@ -28,9 +28,11 @@ func (r *mutationResolver) CreateUser(ctx context.Context, email string) (*ent.U
 			Create().
 			SetActive(false).
 			SetEmail(email).
-			SetEmailAuthenticationKey(randStringRunes(20)).
+			SetEmailAuthenticationKey(randStringRunes(40)).
 			SetEmailAuthenticationKeyCreatedAt(time.Now()).
 			SetEmailAuthenticationStatus(false).
+			SetResetPasswordKey(randStringRunes(40)).
+			SetResetPasswordKeyCreatedAt(time.Now()).
 			Save(ctx)
 		if err != nil {
 			return nil, err
@@ -39,7 +41,7 @@ func (r *mutationResolver) CreateUser(ctx context.Context, email string) (*ent.U
 		return nil, err
 	} else {
 		u, err = u.Update().
-			SetEmailAuthenticationKey(randStringRunes(20)).
+			SetEmailAuthenticationKey(randStringRunes(40)).
 			SetEmailAuthenticationKeyCreatedAt(time.Now()).
 			Save(ctx)
 		if err != nil {
@@ -75,7 +77,6 @@ func (r *mutationResolver) RegisterUser(ctx context.Context, input RegisterUserI
 
 	u, err = u.Update().
 		SetActive(true).
-		SetName(input.Name).
 		SetName(input.Name).
 		SetPassword(string(hashedPassword)).
 		SetEmailAuthenticationStatus(true).
@@ -133,6 +134,70 @@ func (r *mutationResolver) Login(ctx context.Context, email string, password str
 	return &token, nil
 }
 
+func (r *mutationResolver) ResetPasswordRequest(ctx context.Context, email string) (bool, error) {
+	u, err := r.client.User.
+		Query().
+		Where(
+			user.ActiveEQ(true),
+			user.EmailEQ(email),
+		).
+		First(ctx)
+	if err != nil {
+		return false, err
+	}
+
+	u, err = u.Update().
+		SetResetPasswordKey(randStringRunes(40)).
+		SetResetPasswordKeyCreatedAt(time.Now()).
+		Save(ctx)
+	if err != nil {
+		return false, err
+	}
+
+	err = sendmail.ResetPasswordRequest(u.Email, u.ResetPasswordKey)
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
+
+func (r *mutationResolver) ResetPassword(ctx context.Context, key string, password string) (*ent.User, error) {
+	u, err := r.client.User.
+		Query().
+		Where(
+			user.ActiveEQ(true),
+			user.ResetPasswordKeyEQ(key),
+			user.ResetPasswordKeyCreatedAtGT(time.Now().AddDate(0, 0, -1)),
+		).
+		First(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		return nil, err
+	}
+
+	u, err = u.Update().
+		SetPassword(string(hashedPassword)).
+		SetResetPasswordKey(randStringRunes(40)).
+		SetResetPasswordKeyCreatedAt(time.Now()).
+		SetUpdatedAt(time.Now()).
+		Save(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	err = sendmail.ResetPassword(u.Email)
+	if err != nil {
+		return nil, err
+	}
+
+	return u, nil
+}
+
 func (r *queryResolver) Users(ctx context.Context, after *ent.Cursor, first *int, before *ent.Cursor, last *int, orderBy *ent.UserOrder) (*ent.UserConnection, error) {
 	return r.client.User.Query().
 		Paginate(ctx, after, first, before, last,
@@ -166,6 +231,22 @@ func (r *queryResolver) IsValidRegistrationKey(ctx context.Context, key string) 
 			user.ActiveEQ(false),
 			user.EmailAuthenticationKeyCreatedAtGT(time.Now().AddDate(0, 0, -1)),
 			user.EmailAuthenticationKeyEQ(key),
+		).
+		First(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return u, nil
+}
+
+func (r *queryResolver) IsValidResetPasswordKey(ctx context.Context, key string) (*ent.User, error) {
+	u, err := r.client.User.
+		Query().
+		Where(
+			user.ActiveEQ(true),
+			user.ResetPasswordKeyCreatedAtGT(time.Now().AddDate(0, 0, -1)),
+			user.ResetPasswordKeyEQ(key),
 		).
 		First(ctx)
 	if err != nil {

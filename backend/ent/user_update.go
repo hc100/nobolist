@@ -122,6 +122,18 @@ func (uu *UserUpdate) AddRole(i int) *UserUpdate {
 	return uu
 }
 
+// SetResetPasswordKey sets the "reset_password_key" field.
+func (uu *UserUpdate) SetResetPasswordKey(s string) *UserUpdate {
+	uu.mutation.SetResetPasswordKey(s)
+	return uu
+}
+
+// SetResetPasswordKeyCreatedAt sets the "reset_password_key_created_at" field.
+func (uu *UserUpdate) SetResetPasswordKeyCreatedAt(t time.Time) *UserUpdate {
+	uu.mutation.SetResetPasswordKeyCreatedAt(t)
+	return uu
+}
+
 // SetCreatedAt sets the "created_at" field.
 func (uu *UserUpdate) SetCreatedAt(t time.Time) *UserUpdate {
 	uu.mutation.SetCreatedAt(t)
@@ -290,6 +302,20 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: user.FieldRole,
 		})
 	}
+	if value, ok := uu.mutation.ResetPasswordKey(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: user.FieldResetPasswordKey,
+		})
+	}
+	if value, ok := uu.mutation.ResetPasswordKeyCreatedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: user.FieldResetPasswordKeyCreatedAt,
+		})
+	}
 	if value, ok := uu.mutation.CreatedAt(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
@@ -415,6 +441,18 @@ func (uuo *UserUpdateOne) SetNillableRole(i *int) *UserUpdateOne {
 // AddRole adds i to the "role" field.
 func (uuo *UserUpdateOne) AddRole(i int) *UserUpdateOne {
 	uuo.mutation.AddRole(i)
+	return uuo
+}
+
+// SetResetPasswordKey sets the "reset_password_key" field.
+func (uuo *UserUpdateOne) SetResetPasswordKey(s string) *UserUpdateOne {
+	uuo.mutation.SetResetPasswordKey(s)
+	return uuo
+}
+
+// SetResetPasswordKeyCreatedAt sets the "reset_password_key_created_at" field.
+func (uuo *UserUpdateOne) SetResetPasswordKeyCreatedAt(t time.Time) *UserUpdateOne {
+	uuo.mutation.SetResetPasswordKeyCreatedAt(t)
 	return uuo
 }
 
@@ -608,6 +646,20 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			Type:   field.TypeInt,
 			Value:  value,
 			Column: user.FieldRole,
+		})
+	}
+	if value, ok := uuo.mutation.ResetPasswordKey(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: user.FieldResetPasswordKey,
+		})
+	}
+	if value, ok := uuo.mutation.ResetPasswordKeyCreatedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: user.FieldResetPasswordKeyCreatedAt,
 		})
 	}
 	if value, ok := uuo.mutation.CreatedAt(); ok {

@@ -65,10 +65,13 @@ type Query {
   ): UserConnection
   existUserEmail(email: String!): Boolean!
   isValidRegistrationKey(key: String!): User!
+  isValidResetPasswordKey(key: String!): User!
 }
 
 type Mutation {
   createUser(email: String!): User!
   registerUser(input: RegisterUserInput!): User!
   login(email: String!, password: String!): Token!
+  resetPasswordRequest(email: String!): Boolean!
+  resetPassword(key: String!, password: String!): User
 }

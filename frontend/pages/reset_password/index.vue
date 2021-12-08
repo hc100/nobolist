@@ -5,12 +5,14 @@
       <div v-if="mode === MODE_INPUT">
         <div class="w-full max-w-xs">
           <div class="bg-green-200 rounded px-6 pt-6 pb-6 mb-4">
-            新規会員登録 入力
+            パスワードの再設定
           </div>
         </div>
         <div class="w-full max-w-xs">
           <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-            <div v-if="error" style="color: red">{{ error }}</div>
+            <p v-for="(error, index) in errors" :key="index" class="required">
+              {{ error }}
+            </p>
 
             <div class="mb-4">
               <label
@@ -28,13 +30,14 @@
                 required
               />
             </div>
+
             <div class="flex items-center justify-between">
               <button
                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 type="button"
                 @click="onSubmit"
               >
-                送信する
+                送信
               </button>
             </div>
           </form>
@@ -43,7 +46,7 @@
       <div v-if="mode === MODE_COMPLETE">
         <div class="w-full max-w-xs">
           <div class="bg-green-200 rounded px-6 pt-6 pb-6 mb-4">
-            新規会員登録 メール送信完了
+            パスワードの再設定 メール送信完了
           </div>
         </div>
         <div class="w-full max-w-xs">
@@ -57,76 +60,71 @@
 </template>
 
 <script>
-import ExistUserEmail from '~/apollo/existUserEmail'
-import CreateUser from '~/apollo/createUser'
-import { isValidEmail } from '~/utils/validators.js'
+import ResetPasswordRequest from '~/apollo/resetPasswordRequest'
 
 const MODE_INPUT = 'Input'
 const MODE_COMPLETE = 'Complete'
 
 export default {
+  apollo: {},
   data() {
     return {
       MODE_INPUT,
       MODE_COMPLETE,
       mode: MODE_INPUT,
-      email: null,
-      error: null,
       submitting: false,
+      errors: [],
+      email: null,
     }
   },
+  head() {
+    return {
+      title: 'パスワードの再設定',
+    }
+  },
+  computed: {},
+  watch: {},
+  beforeMount() {},
+  mounted() {},
+  created() {},
   methods: {
     async onSubmit(e) {
       e.preventDefault()
-      this.error = null
+      this.errors = []
       this.submitting = true
 
-      if (!this.email) {
-        this.submitting = false
-        this.error = 'メールアドレスを入力してください'
-        return
+      if (this.email !== null) {
+        this.email = this.email.trim()
       }
 
-      if (!isValidEmail(this.email)) {
-        this.submitting = false
-        this.error = 'メールアドレスを正しく入力してください'
-        return
+      if (!this.email) {
+        this.errors.push('メールアドレスを入力してください。')
+      }
+
+      if (this.errors.length > 0) {
+        return false
       }
 
       try {
         await this.$apollo
-          .query({
-            query: ExistUserEmail,
+          .mutate({
+            mutation: ResetPasswordRequest,
             variables: { email: this.email },
           })
           .then(({ data }) => {
-            if (!data.existUserEmail) {
-              this.$apollo
-                .mutate({
-                  mutation: CreateUser,
-                  variables: {
-                    email: this.email,
-                  },
-                })
-                .then(({ data }) => {
-                  this.submitting = false
-                  this.mode = MODE_COMPLETE
-                  window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth',
-                  })
-                })
-            } else {
-              this.submitting = false
-              this.error = 'メールアドレスは既に登録されています'
-            }
+            this.submitting = false
+            this.mode = MODE_COMPLETE
+            window.scrollTo({
+              top: 0,
+              behavior: 'smooth',
+            })
           })
-        this.submitting = false
       } catch (e) {
-        this.submitting = false
-        this.error = e
+        console.error(e)
       }
     },
   },
 }
 </script>
+
+<style></style>

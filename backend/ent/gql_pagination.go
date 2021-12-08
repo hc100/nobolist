@@ -446,36 +446,6 @@ var (
 			}
 		},
 	}
-	// UserOrderFieldEmailAuthenticationKey orders User by email_authentication_key.
-	UserOrderFieldEmailAuthenticationKey = &UserOrderField{
-		field: user.FieldEmailAuthenticationKey,
-		toCursor: func(u *User) Cursor {
-			return Cursor{
-				ID:    u.ID,
-				Value: u.EmailAuthenticationKey,
-			}
-		},
-	}
-	// UserOrderFieldEmailAuthenticationKeyCreatedAt orders User by email_authentication_key_created_at.
-	UserOrderFieldEmailAuthenticationKeyCreatedAt = &UserOrderField{
-		field: user.FieldEmailAuthenticationKeyCreatedAt,
-		toCursor: func(u *User) Cursor {
-			return Cursor{
-				ID:    u.ID,
-				Value: u.EmailAuthenticationKeyCreatedAt,
-			}
-		},
-	}
-	// UserOrderFieldEmailAuthenticationStatus orders User by email_authentication_status.
-	UserOrderFieldEmailAuthenticationStatus = &UserOrderField{
-		field: user.FieldEmailAuthenticationStatus,
-		toCursor: func(u *User) Cursor {
-			return Cursor{
-				ID:    u.ID,
-				Value: u.EmailAuthenticationStatus,
-			}
-		},
-	}
 	// UserOrderFieldName orders User by name.
 	UserOrderFieldName = &UserOrderField{
 		field: user.FieldName,
@@ -483,26 +453,6 @@ var (
 			return Cursor{
 				ID:    u.ID,
 				Value: u.Name,
-			}
-		},
-	}
-	// UserOrderFieldPassword orders User by password.
-	UserOrderFieldPassword = &UserOrderField{
-		field: user.FieldPassword,
-		toCursor: func(u *User) Cursor {
-			return Cursor{
-				ID:    u.ID,
-				Value: u.Password,
-			}
-		},
-	}
-	// UserOrderFieldRole orders User by role.
-	UserOrderFieldRole = &UserOrderField{
-		field: user.FieldRole,
-		toCursor: func(u *User) Cursor {
-			return Cursor{
-				ID:    u.ID,
-				Value: u.Role,
 			}
 		},
 	}
@@ -536,18 +486,8 @@ func (f UserOrderField) String() string {
 		str = "ACTIVE"
 	case user.FieldEmail:
 		str = "EMAIL"
-	case user.FieldEmailAuthenticationKey:
-		str = "EMAIL_AUTHENTICATION_KEY"
-	case user.FieldEmailAuthenticationKeyCreatedAt:
-		str = "EMAIL_AUTHENTICATION_KEY_CREATED_AT"
-	case user.FieldEmailAuthenticationStatus:
-		str = "EMAIL_AUTHENTICATION_STATUS"
 	case user.FieldName:
 		str = "NAME"
-	case user.FieldPassword:
-		str = "PASSWORD"
-	case user.FieldRole:
-		str = "ROLE"
 	case user.FieldCreatedAt:
 		str = "CREATED_AT"
 	case user.FieldUpdatedAt:
@@ -572,18 +512,8 @@ func (f *UserOrderField) UnmarshalGQL(v interface{}) error {
 		*f = *UserOrderFieldActive
 	case "EMAIL":
 		*f = *UserOrderFieldEmail
-	case "EMAIL_AUTHENTICATION_KEY":
-		*f = *UserOrderFieldEmailAuthenticationKey
-	case "EMAIL_AUTHENTICATION_KEY_CREATED_AT":
-		*f = *UserOrderFieldEmailAuthenticationKeyCreatedAt
-	case "EMAIL_AUTHENTICATION_STATUS":
-		*f = *UserOrderFieldEmailAuthenticationStatus
 	case "NAME":
 		*f = *UserOrderFieldName
-	case "PASSWORD":
-		*f = *UserOrderFieldPassword
-	case "ROLE":
-		*f = *UserOrderFieldRole
 	case "CREATED_AT":
 		*f = *UserOrderFieldCreatedAt
 	case "UPDATED_AT":

@@ -1,7 +1,7 @@
 <template>
   <div>
     <Header />
-    <main>
+    <main class="pl-8">
       <div class="w-full max-w-xs">
         <div class="bg-green-200 rounded px-6 pt-6 pb-6 mb-4">
           ダッシュボード

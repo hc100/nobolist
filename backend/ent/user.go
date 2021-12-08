@@ -32,6 +32,10 @@ type User struct {
 	Password string `json:"password,omitempty"`
 	// Role holds the value of the "role" field.
 	Role int `json:"role,omitempty"`
+	// ResetPasswordKey holds the value of the "reset_password_key" field.
+	ResetPasswordKey string `json:"reset_password_key,omitempty"`
+	// ResetPasswordKeyCreatedAt holds the value of the "reset_password_key_created_at" field.
+	ResetPasswordKeyCreatedAt time.Time `json:"reset_password_key_created_at,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// UpdatedAt holds the value of the "updated_at" field.
@@ -47,9 +51,9 @@ func (*User) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new(sql.NullBool)
 		case user.FieldID, user.FieldRole:
 			values[i] = new(sql.NullInt64)
-		case user.FieldEmail, user.FieldEmailAuthenticationKey, user.FieldName, user.FieldPassword:
+		case user.FieldEmail, user.FieldEmailAuthenticationKey, user.FieldName, user.FieldPassword, user.FieldResetPasswordKey:
 			values[i] = new(sql.NullString)
-		case user.FieldEmailAuthenticationKeyCreatedAt, user.FieldCreatedAt, user.FieldUpdatedAt:
+		case user.FieldEmailAuthenticationKeyCreatedAt, user.FieldResetPasswordKeyCreatedAt, user.FieldCreatedAt, user.FieldUpdatedAt:
 			values[i] = new(sql.NullTime)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type User", columns[i])
@@ -120,6 +124,18 @@ func (u *User) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				u.Role = int(value.Int64)
 			}
+		case user.FieldResetPasswordKey:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field reset_password_key", values[i])
+			} else if value.Valid {
+				u.ResetPasswordKey = value.String
+			}
+		case user.FieldResetPasswordKeyCreatedAt:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field reset_password_key_created_at", values[i])
+			} else if value.Valid {
+				u.ResetPasswordKeyCreatedAt = value.Time
+			}
 		case user.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field created_at", values[i])
@@ -176,6 +192,10 @@ func (u *User) String() string {
 	builder.WriteString(u.Password)
 	builder.WriteString(", role=")
 	builder.WriteString(fmt.Sprintf("%v", u.Role))
+	builder.WriteString(", reset_password_key=")
+	builder.WriteString(u.ResetPasswordKey)
+	builder.WriteString(", reset_password_key_created_at=")
+	builder.WriteString(u.ResetPasswordKeyCreatedAt.Format(time.ANSIC))
 	builder.WriteString(", created_at=")
 	builder.WriteString(u.CreatedAt.Format(time.ANSIC))
 	builder.WriteString(", updated_at=")

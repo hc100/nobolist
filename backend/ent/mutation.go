@@ -41,6 +41,8 @@ type UserMutation struct {
 	password                            *string
 	role                                *int
 	addrole                             *int
+	reset_password_key                  *string
+	reset_password_key_created_at       *time.Time
 	created_at                          *time.Time
 	updated_at                          *time.Time
 	clearedFields                       map[string]struct{}
@@ -436,6 +438,78 @@ func (m *UserMutation) ResetRole() {
 	m.addrole = nil
 }
 
+// SetResetPasswordKey sets the "reset_password_key" field.
+func (m *UserMutation) SetResetPasswordKey(s string) {
+	m.reset_password_key = &s
+}
+
+// ResetPasswordKey returns the value of the "reset_password_key" field in the mutation.
+func (m *UserMutation) ResetPasswordKey() (r string, exists bool) {
+	v := m.reset_password_key
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldResetPasswordKey returns the old "reset_password_key" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldResetPasswordKey(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldResetPasswordKey is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldResetPasswordKey requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldResetPasswordKey: %w", err)
+	}
+	return oldValue.ResetPasswordKey, nil
+}
+
+// ResetResetPasswordKey resets all changes to the "reset_password_key" field.
+func (m *UserMutation) ResetResetPasswordKey() {
+	m.reset_password_key = nil
+}
+
+// SetResetPasswordKeyCreatedAt sets the "reset_password_key_created_at" field.
+func (m *UserMutation) SetResetPasswordKeyCreatedAt(t time.Time) {
+	m.reset_password_key_created_at = &t
+}
+
+// ResetPasswordKeyCreatedAt returns the value of the "reset_password_key_created_at" field in the mutation.
+func (m *UserMutation) ResetPasswordKeyCreatedAt() (r time.Time, exists bool) {
+	v := m.reset_password_key_created_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldResetPasswordKeyCreatedAt returns the old "reset_password_key_created_at" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldResetPasswordKeyCreatedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldResetPasswordKeyCreatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldResetPasswordKeyCreatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldResetPasswordKeyCreatedAt: %w", err)
+	}
+	return oldValue.ResetPasswordKeyCreatedAt, nil
+}
+
+// ResetResetPasswordKeyCreatedAt resets all changes to the "reset_password_key_created_at" field.
+func (m *UserMutation) ResetResetPasswordKeyCreatedAt() {
+	m.reset_password_key_created_at = nil
+}
+
 // SetCreatedAt sets the "created_at" field.
 func (m *UserMutation) SetCreatedAt(t time.Time) {
 	m.created_at = &t
@@ -527,7 +601,7 @@ func (m *UserMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *UserMutation) Fields() []string {
-	fields := make([]string, 0, 10)
+	fields := make([]string, 0, 12)
 	if m.active != nil {
 		fields = append(fields, user.FieldActive)
 	}
@@ -551,6 +625,12 @@ func (m *UserMutation) Fields() []string {
 	}
 	if m.role != nil {
 		fields = append(fields, user.FieldRole)
+	}
+	if m.reset_password_key != nil {
+		fields = append(fields, user.FieldResetPasswordKey)
+	}
+	if m.reset_password_key_created_at != nil {
+		fields = append(fields, user.FieldResetPasswordKeyCreatedAt)
 	}
 	if m.created_at != nil {
 		fields = append(fields, user.FieldCreatedAt)
@@ -582,6 +662,10 @@ func (m *UserMutation) Field(name string) (ent.Value, bool) {
 		return m.Password()
 	case user.FieldRole:
 		return m.Role()
+	case user.FieldResetPasswordKey:
+		return m.ResetPasswordKey()
+	case user.FieldResetPasswordKeyCreatedAt:
+		return m.ResetPasswordKeyCreatedAt()
 	case user.FieldCreatedAt:
 		return m.CreatedAt()
 	case user.FieldUpdatedAt:
@@ -611,6 +695,10 @@ func (m *UserMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldPassword(ctx)
 	case user.FieldRole:
 		return m.OldRole(ctx)
+	case user.FieldResetPasswordKey:
+		return m.OldResetPasswordKey(ctx)
+	case user.FieldResetPasswordKeyCreatedAt:
+		return m.OldResetPasswordKeyCreatedAt(ctx)
 	case user.FieldCreatedAt:
 		return m.OldCreatedAt(ctx)
 	case user.FieldUpdatedAt:
@@ -679,6 +767,20 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetRole(v)
+		return nil
+	case user.FieldResetPasswordKey:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetResetPasswordKey(v)
+		return nil
+	case user.FieldResetPasswordKeyCreatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetResetPasswordKeyCreatedAt(v)
 		return nil
 	case user.FieldCreatedAt:
 		v, ok := value.(time.Time)
@@ -781,6 +883,12 @@ func (m *UserMutation) ResetField(name string) error {
 		return nil
 	case user.FieldRole:
 		m.ResetRole()
+		return nil
+	case user.FieldResetPasswordKey:
+		m.ResetResetPasswordKey()
+		return nil
+	case user.FieldResetPasswordKeyCreatedAt:
+		m.ResetResetPasswordKeyCreatedAt()
 		return nil
 	case user.FieldCreatedAt:
 		m.ResetCreatedAt()

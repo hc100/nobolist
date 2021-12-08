@@ -1,12 +1,12 @@
 <template>
   <div>
-    <Header />
-    <main class="pl-8">
-      <div class="w-full max-w-xs">
-        <div class="bg-green-200 rounded px-6 pt-6 pb-6 mb-4">ログアウト</div>
+    <Nav />
+    <header class="bg-white shadow">
+      <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <h1 class="text-3xl font-bold text-gray-900">ログアウト</h1>
       </div>
-      <div class="w-full max-w-xs"></div>
-    </main>
+    </header>
+    <main class="pl-8"></main>
   </div>
 </template>
 

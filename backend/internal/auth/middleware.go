@@ -34,15 +34,18 @@ func Middleware(client *ent.Client) func(http.Handler) http.Handler {
 				return
 			}
 
-			// create user and check if user exists in db
-			users, err := client.User.
+			// check if user exists in db
+			u, err := client.User.
 				Query().
 				Where(user.EmailEQ(email)).
-				All(context.Background())
-			u := users[0]
+				First(context.Background())
+			if err != nil {
+				next.ServeHTTP(w, r)
+				return
+			}
 
 			// put it in context
-			ctx := context.WithValue(r.Context(), userCtxKey, &u)
+			ctx := context.WithValue(r.Context(), userCtxKey, u)
 
 			// and call the next with our new context
 			r = r.WithContext(ctx)

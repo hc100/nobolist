@@ -11,7 +11,13 @@
         <div v-if="mode === MODE_INPUT" class="px-4 py-6 sm:px-0">
           <div class="border-2 border-gray-200 rounded h-96">
             <form class="px-8 pt-6 pb-8 mb-4">
-              <div v-if="error" class="mb-4 text-red-600">{{ error }}</div>
+              <div
+                v-for="(error, index) in errors"
+                :key="index"
+                class="mb-4 text-red-600"
+              >
+                {{ error }}
+              </div>
 
               <div class="mb-4">
                 <label
@@ -68,25 +74,25 @@ export default {
       MODE_COMPLETE,
       mode: MODE_INPUT,
       email: null,
-      error: null,
+      errors: [],
       submitting: false,
     }
   },
   methods: {
     async onSubmit(e) {
       e.preventDefault()
-      this.error = null
+      this.errors = []
       this.submitting = true
 
       if (!this.email) {
         this.submitting = false
-        this.error = 'メールアドレスを入力してください'
+        this.errors.push('メールアドレスを入力してください')
         return
       }
 
       if (!isValidEmail(this.email)) {
         this.submitting = false
-        this.error = 'メールアドレスを正しく入力してください'
+        this.errors.push('メールアドレスを正しく入力してください')
         return
       }
 
@@ -115,13 +121,15 @@ export default {
                 })
             } else {
               this.submitting = false
-              this.error = 'メールアドレスは既に登録されています'
+              this.errors.push('メールアドレスは既に登録されています')
             }
           })
         this.submitting = false
       } catch (e) {
         this.submitting = false
-        this.error = e
+        e.graphQLErrors.map(({ message, locations, path }) =>
+          this.errors.push(message)
+        )
       }
     },
   },

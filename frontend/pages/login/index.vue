@@ -139,7 +139,9 @@ export default {
         await this.$apolloHelpers.onLogin(res.accessToken)
         this.$router.push({ name: 'dashboard' })
       } catch (e) {
-        console.error(e)
+        e.graphQLErrors.map(({ message, locations, path }) =>
+          this.errors.push(message)
+        )
       }
     },
   },

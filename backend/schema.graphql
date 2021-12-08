@@ -66,6 +66,7 @@ type Query {
   existUserEmail(email: String!): Boolean!
   isValidRegistrationKey(key: String!): User!
   isValidResetPasswordKey(key: String!): User!
+  myself: User!
 }
 
 type Mutation {

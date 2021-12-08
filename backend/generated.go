@@ -63,6 +63,7 @@ type ComplexityRoot struct {
 		ExistUserEmail          func(childComplexity int, email string) int
 		IsValidRegistrationKey  func(childComplexity int, key string) int
 		IsValidResetPasswordKey func(childComplexity int, key string) int
+		Myself                  func(childComplexity int) int
 		Users                   func(childComplexity int, after *ent.Cursor, first *int, before *ent.Cursor, last *int, orderBy *ent.UserOrder) int
 	}
 
@@ -102,6 +103,7 @@ type QueryResolver interface {
 	ExistUserEmail(ctx context.Context, email string) (bool, error)
 	IsValidRegistrationKey(ctx context.Context, key string) (*ent.User, error)
 	IsValidResetPasswordKey(ctx context.Context, key string) (*ent.User, error)
+	Myself(ctx context.Context) (*ent.User, error)
 }
 
 type executableSchema struct {
@@ -242,6 +244,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.IsValidResetPasswordKey(childComplexity, args["key"].(string)), true
+
+	case "Query.myself":
+		if e.complexity.Query.Myself == nil {
+			break
+		}
+
+		return e.complexity.Query.Myself(childComplexity), true
 
 	case "Query.users":
 		if e.complexity.Query.Users == nil {
@@ -464,6 +473,7 @@ type Query {
   existUserEmail(email: String!): Boolean!
   isValidRegistrationKey(key: String!): User!
   isValidResetPasswordKey(key: String!): User!
+  myself: User!
 }
 
 type Mutation {
@@ -1213,6 +1223,41 @@ func (ec *executionContext) _Query_isValidResetPasswordKey(ctx context.Context, 
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return ec.resolvers.Query().IsValidResetPasswordKey(rctx, args["key"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*ent.User)
+	fc.Result = res
+	return ec.marshalNUser2ᚖgithubᚗcomᚋhc100ᚋnobolistᚋbackendᚋentᚐUser(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_myself(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Myself(rctx)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3040,6 +3085,20 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_isValidResetPasswordKey(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
+		case "myself":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_myself(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}

@@ -10,6 +10,7 @@ import (
 
 	"github.com/hc100/nobolist/backend/ent"
 	"github.com/hc100/nobolist/backend/ent/user"
+	"github.com/hc100/nobolist/backend/internal/auth"
 	"github.com/hc100/nobolist/backend/jwt"
 	"github.com/hc100/nobolist/backend/lib/util/sendmail"
 	"golang.org/x/crypto/bcrypt"
@@ -251,6 +252,15 @@ func (r *queryResolver) IsValidResetPasswordKey(ctx context.Context, key string)
 		First(ctx)
 	if err != nil {
 		return nil, err
+	}
+
+	return u, nil
+}
+
+func (r *queryResolver) Myself(ctx context.Context) (*ent.User, error) {
+	u := auth.ForContext(ctx)
+	if u == nil {
+		return nil, fmt.Errorf("Access denied")
 	}
 
 	return u, nil

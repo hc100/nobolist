@@ -69,6 +69,8 @@ func main() {
 	if err := client.Schema.Create(
 		context.Background(),
 		migrate.WithGlobalUniqueID(true),
+		migrate.WithDropIndex(true),
+		migrate.WithDropColumn(true),
 	); err != nil {
 		log.Fatal("running schema migration", zap.Error(err))
 	}

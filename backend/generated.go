@@ -52,6 +52,22 @@ type ComplexityRoot struct {
 		ResetPasswordRequest func(childComplexity int, email string) int
 	}
 
+	Myself struct {
+		Birthday        func(childComplexity int) int
+		BirthdayDisplay func(childComplexity int) int
+		Email           func(childComplexity int) int
+		Gender          func(childComplexity int) int
+		GenderDisplay   func(childComplexity int) int
+		Height          func(childComplexity int) int
+		HeightDisplay   func(childComplexity int) int
+		ID              func(childComplexity int) int
+		Name            func(childComplexity int) int
+		Weight          func(childComplexity int) int
+		WeightDisplay   func(childComplexity int) int
+		Wingspan        func(childComplexity int) int
+		WingspanDisplay func(childComplexity int) int
+	}
+
 	PageInfo struct {
 		EndCursor       func(childComplexity int) int
 		HasNextPage     func(childComplexity int) int
@@ -103,7 +119,7 @@ type QueryResolver interface {
 	ExistUserEmail(ctx context.Context, email string) (bool, error)
 	IsValidRegistrationKey(ctx context.Context, key string) (*ent.User, error)
 	IsValidResetPasswordKey(ctx context.Context, key string) (*ent.User, error)
-	Myself(ctx context.Context) (*ent.User, error)
+	Myself(ctx context.Context) (*Myself, error)
 }
 
 type executableSchema struct {
@@ -180,6 +196,97 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.ResetPasswordRequest(childComplexity, args["email"].(string)), true
+
+	case "Myself.birthday":
+		if e.complexity.Myself.Birthday == nil {
+			break
+		}
+
+		return e.complexity.Myself.Birthday(childComplexity), true
+
+	case "Myself.birthdayDisplay":
+		if e.complexity.Myself.BirthdayDisplay == nil {
+			break
+		}
+
+		return e.complexity.Myself.BirthdayDisplay(childComplexity), true
+
+	case "Myself.email":
+		if e.complexity.Myself.Email == nil {
+			break
+		}
+
+		return e.complexity.Myself.Email(childComplexity), true
+
+	case "Myself.gender":
+		if e.complexity.Myself.Gender == nil {
+			break
+		}
+
+		return e.complexity.Myself.Gender(childComplexity), true
+
+	case "Myself.genderDisplay":
+		if e.complexity.Myself.GenderDisplay == nil {
+			break
+		}
+
+		return e.complexity.Myself.GenderDisplay(childComplexity), true
+
+	case "Myself.height":
+		if e.complexity.Myself.Height == nil {
+			break
+		}
+
+		return e.complexity.Myself.Height(childComplexity), true
+
+	case "Myself.heightDisplay":
+		if e.complexity.Myself.HeightDisplay == nil {
+			break
+		}
+
+		return e.complexity.Myself.HeightDisplay(childComplexity), true
+
+	case "Myself.id":
+		if e.complexity.Myself.ID == nil {
+			break
+		}
+
+		return e.complexity.Myself.ID(childComplexity), true
+
+	case "Myself.name":
+		if e.complexity.Myself.Name == nil {
+			break
+		}
+
+		return e.complexity.Myself.Name(childComplexity), true
+
+	case "Myself.weight":
+		if e.complexity.Myself.Weight == nil {
+			break
+		}
+
+		return e.complexity.Myself.Weight(childComplexity), true
+
+	case "Myself.weightDisplay":
+		if e.complexity.Myself.WeightDisplay == nil {
+			break
+		}
+
+		return e.complexity.Myself.WeightDisplay(childComplexity), true
+
+	case "Myself.wingspan":
+		if e.complexity.Myself.Wingspan == nil {
+			break
+		}
+
+		return e.complexity.Myself.Wingspan(childComplexity), true
+
+	case "Myself.wingspanDisplay":
+		if e.complexity.Myself.WingspanDisplay == nil {
+			break
+		}
+
+		return e.complexity.Myself.WingspanDisplay(childComplexity), true
 
 	case "PageInfo.endCursor":
 		if e.complexity.PageInfo.EndCursor == nil {
@@ -415,6 +522,17 @@ enum UserOrderField {
   NAME
 }
 
+enum DisplayFlag {
+  PRIVATE
+  FRIENDS
+  PUBLIC
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
 interface Node {
   id: ID!
 }
@@ -423,6 +541,22 @@ type User implements Node {
   id: ID!
   email: String!
   name: String!
+}
+
+type Myself {
+  id: ID!
+  email: String!
+  name: String!
+  height: Int!
+  heightDisplay: String!
+  weight: Int!
+  weightDisplay: String!
+  wingspan: Int!
+  wingspanDisplay: String!
+  birthday: Date!
+  birthdayDisplay: String!
+  gender: Date!
+  genderDisplay: String!
 }
 
 scalar Cursor
@@ -460,6 +594,16 @@ input RegisterUserInput {
   key: String!
   name: String!
   password: String!
+  height: Int!
+  heightDisplay: DisplayFlag!
+  weight: Int!
+  weightDisplay: DisplayFlag!
+  wingspan: Int!
+  wingspanDisplay: DisplayFlag!
+  birthday: Date!
+  birthdayDisplay: DisplayFlag!
+  gender: Gender!
+  genderDisplay: DisplayFlag!
 }
 
 type Query {
@@ -473,7 +617,7 @@ type Query {
   existUserEmail(email: String!): Boolean!
   isValidRegistrationKey(key: String!): User!
   isValidResetPasswordKey(key: String!): User!
-  myself: User!
+  myself: Myself!
 }
 
 type Mutation {
@@ -483,6 +627,9 @@ type Mutation {
   resetPasswordRequest(email: String!): Boolean!
   resetPassword(key: String!, password: String!): User
 }
+
+"Date in ISO8601 e.g. 2006-01-31"
+scalar Date
 `, BuiltIn: false},
 }
 var parsedSchema = gqlparser.MustLoadSchema(sources...)
@@ -940,6 +1087,461 @@ func (ec *executionContext) _Mutation_resetPassword(ctx context.Context, field g
 	return ec.marshalOUser2ᚖgithubᚗcomᚋhc100ᚋnobolistᚋbackendᚋentᚐUser(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Myself_id(ctx context.Context, field graphql.CollectedField, obj *Myself) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Myself",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNID2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Myself_email(ctx context.Context, field graphql.CollectedField, obj *Myself) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Myself",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Email, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Myself_name(ctx context.Context, field graphql.CollectedField, obj *Myself) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Myself",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Name, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Myself_height(ctx context.Context, field graphql.CollectedField, obj *Myself) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Myself",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Height, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Myself_heightDisplay(ctx context.Context, field graphql.CollectedField, obj *Myself) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Myself",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.HeightDisplay, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Myself_weight(ctx context.Context, field graphql.CollectedField, obj *Myself) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Myself",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Weight, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Myself_weightDisplay(ctx context.Context, field graphql.CollectedField, obj *Myself) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Myself",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.WeightDisplay, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Myself_wingspan(ctx context.Context, field graphql.CollectedField, obj *Myself) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Myself",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Wingspan, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Myself_wingspanDisplay(ctx context.Context, field graphql.CollectedField, obj *Myself) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Myself",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.WingspanDisplay, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Myself_birthday(ctx context.Context, field graphql.CollectedField, obj *Myself) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Myself",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Birthday, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNDate2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Myself_birthdayDisplay(ctx context.Context, field graphql.CollectedField, obj *Myself) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Myself",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.BirthdayDisplay, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Myself_gender(ctx context.Context, field graphql.CollectedField, obj *Myself) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Myself",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Gender, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNDate2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Myself_genderDisplay(ctx context.Context, field graphql.CollectedField, obj *Myself) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Myself",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.GenderDisplay, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _PageInfo_hasNextPage(ctx context.Context, field graphql.CollectedField, obj *ent.PageInfo) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -1269,9 +1871,9 @@ func (ec *executionContext) _Query_myself(ctx context.Context, field graphql.Col
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*ent.User)
+	res := resTmp.(*Myself)
 	fc.Result = res
-	return ec.marshalNUser2ᚖgithubᚗcomᚋhc100ᚋnobolistᚋbackendᚋentᚐUser(ctx, field.Selections, res)
+	return ec.marshalNMyself2ᚖgithubᚗcomᚋhc100ᚋnobolistᚋbackendᚐMyself(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -2879,6 +3481,86 @@ func (ec *executionContext) unmarshalInputRegisterUserInput(ctx context.Context,
 			if err != nil {
 				return it, err
 			}
+		case "height":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("height"))
+			it.Height, err = ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "heightDisplay":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("heightDisplay"))
+			it.HeightDisplay, err = ec.unmarshalNDisplayFlag2githubᚗcomᚋhc100ᚋnobolistᚋbackendᚐDisplayFlag(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "weight":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("weight"))
+			it.Weight, err = ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "weightDisplay":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("weightDisplay"))
+			it.WeightDisplay, err = ec.unmarshalNDisplayFlag2githubᚗcomᚋhc100ᚋnobolistᚋbackendᚐDisplayFlag(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "wingspan":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("wingspan"))
+			it.Wingspan, err = ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "wingspanDisplay":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("wingspanDisplay"))
+			it.WingspanDisplay, err = ec.unmarshalNDisplayFlag2githubᚗcomᚋhc100ᚋnobolistᚋbackendᚐDisplayFlag(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "birthday":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("birthday"))
+			it.Birthday, err = ec.unmarshalNDate2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "birthdayDisplay":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("birthdayDisplay"))
+			it.BirthdayDisplay, err = ec.unmarshalNDisplayFlag2githubᚗcomᚋhc100ᚋnobolistᚋbackendᚐDisplayFlag(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "gender":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("gender"))
+			it.Gender, err = ec.unmarshalNGender2githubᚗcomᚋhc100ᚋnobolistᚋbackendᚐGender(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "genderDisplay":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("genderDisplay"))
+			it.GenderDisplay, err = ec.unmarshalNDisplayFlag2githubᚗcomᚋhc100ᚋnobolistᚋbackendᚐDisplayFlag(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		}
 	}
 
@@ -2975,6 +3657,93 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			}
 		case "resetPassword":
 			out.Values[i] = ec._Mutation_resetPassword(ctx, field)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var myselfImplementors = []string{"Myself"}
+
+func (ec *executionContext) _Myself(ctx context.Context, sel ast.SelectionSet, obj *Myself) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, myselfImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Myself")
+		case "id":
+			out.Values[i] = ec._Myself_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "email":
+			out.Values[i] = ec._Myself_email(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "name":
+			out.Values[i] = ec._Myself_name(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "height":
+			out.Values[i] = ec._Myself_height(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "heightDisplay":
+			out.Values[i] = ec._Myself_heightDisplay(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "weight":
+			out.Values[i] = ec._Myself_weight(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "weightDisplay":
+			out.Values[i] = ec._Myself_weightDisplay(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "wingspan":
+			out.Values[i] = ec._Myself_wingspan(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "wingspanDisplay":
+			out.Values[i] = ec._Myself_wingspanDisplay(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "birthday":
+			out.Values[i] = ec._Myself_birthday(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "birthdayDisplay":
+			out.Values[i] = ec._Myself_birthdayDisplay(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "gender":
+			out.Values[i] = ec._Myself_gender(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "genderDisplay":
+			out.Values[i] = ec._Myself_genderDisplay(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -3531,6 +4300,41 @@ func (ec *executionContext) marshalNCursor2githubᚗcomᚋhc100ᚋnobolistᚋbac
 	return v
 }
 
+func (ec *executionContext) unmarshalNDate2string(ctx context.Context, v interface{}) (string, error) {
+	res, err := graphql.UnmarshalString(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNDate2string(ctx context.Context, sel ast.SelectionSet, v string) graphql.Marshaler {
+	res := graphql.MarshalString(v)
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+	}
+	return res
+}
+
+func (ec *executionContext) unmarshalNDisplayFlag2githubᚗcomᚋhc100ᚋnobolistᚋbackendᚐDisplayFlag(ctx context.Context, v interface{}) (DisplayFlag, error) {
+	var res DisplayFlag
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNDisplayFlag2githubᚗcomᚋhc100ᚋnobolistᚋbackendᚐDisplayFlag(ctx context.Context, sel ast.SelectionSet, v DisplayFlag) graphql.Marshaler {
+	return v
+}
+
+func (ec *executionContext) unmarshalNGender2githubᚗcomᚋhc100ᚋnobolistᚋbackendᚐGender(ctx context.Context, v interface{}) (Gender, error) {
+	var res Gender
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNGender2githubᚗcomᚋhc100ᚋnobolistᚋbackendᚐGender(ctx context.Context, sel ast.SelectionSet, v Gender) graphql.Marshaler {
+	return v
+}
+
 func (ec *executionContext) unmarshalNID2int(ctx context.Context, v interface{}) (int, error) {
 	res, err := graphql.UnmarshalIntID(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -3559,6 +4363,20 @@ func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.Selecti
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) marshalNMyself2githubᚗcomᚋhc100ᚋnobolistᚋbackendᚐMyself(ctx context.Context, sel ast.SelectionSet, v Myself) graphql.Marshaler {
+	return ec._Myself(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNMyself2ᚖgithubᚗcomᚋhc100ᚋnobolistᚋbackendᚐMyself(ctx context.Context, sel ast.SelectionSet, v *Myself) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._Myself(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNOrderDirection2githubᚗcomᚋhc100ᚋnobolistᚋbackendᚋentᚐOrderDirection(ctx context.Context, v interface{}) (ent.OrderDirection, error) {

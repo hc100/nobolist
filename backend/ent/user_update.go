@@ -79,14 +79,6 @@ func (uu *UserUpdate) SetName(s string) *UserUpdate {
 	return uu
 }
 
-// SetNillableName sets the "name" field if the given value is not nil.
-func (uu *UserUpdate) SetNillableName(s *string) *UserUpdate {
-	if s != nil {
-		uu.SetName(*s)
-	}
-	return uu
-}
-
 // SetPassword sets the "password" field.
 func (uu *UserUpdate) SetPassword(s string) *UserUpdate {
 	uu.mutation.SetPassword(s)
@@ -134,6 +126,87 @@ func (uu *UserUpdate) SetResetPasswordKeyCreatedAt(t time.Time) *UserUpdate {
 	return uu
 }
 
+// SetHeight sets the "height" field.
+func (uu *UserUpdate) SetHeight(i int) *UserUpdate {
+	uu.mutation.ResetHeight()
+	uu.mutation.SetHeight(i)
+	return uu
+}
+
+// AddHeight adds i to the "height" field.
+func (uu *UserUpdate) AddHeight(i int) *UserUpdate {
+	uu.mutation.AddHeight(i)
+	return uu
+}
+
+// SetHeightDisplay sets the "height_display" field.
+func (uu *UserUpdate) SetHeightDisplay(ud user.HeightDisplay) *UserUpdate {
+	uu.mutation.SetHeightDisplay(ud)
+	return uu
+}
+
+// SetWeight sets the "weight" field.
+func (uu *UserUpdate) SetWeight(i int) *UserUpdate {
+	uu.mutation.ResetWeight()
+	uu.mutation.SetWeight(i)
+	return uu
+}
+
+// AddWeight adds i to the "weight" field.
+func (uu *UserUpdate) AddWeight(i int) *UserUpdate {
+	uu.mutation.AddWeight(i)
+	return uu
+}
+
+// SetWeightDisplay sets the "weight_display" field.
+func (uu *UserUpdate) SetWeightDisplay(ud user.WeightDisplay) *UserUpdate {
+	uu.mutation.SetWeightDisplay(ud)
+	return uu
+}
+
+// SetWingspan sets the "wingspan" field.
+func (uu *UserUpdate) SetWingspan(i int) *UserUpdate {
+	uu.mutation.ResetWingspan()
+	uu.mutation.SetWingspan(i)
+	return uu
+}
+
+// AddWingspan adds i to the "wingspan" field.
+func (uu *UserUpdate) AddWingspan(i int) *UserUpdate {
+	uu.mutation.AddWingspan(i)
+	return uu
+}
+
+// SetWingspanDisplay sets the "wingspan_display" field.
+func (uu *UserUpdate) SetWingspanDisplay(ud user.WingspanDisplay) *UserUpdate {
+	uu.mutation.SetWingspanDisplay(ud)
+	return uu
+}
+
+// SetBirthday sets the "birthday" field.
+func (uu *UserUpdate) SetBirthday(t time.Time) *UserUpdate {
+	uu.mutation.SetBirthday(t)
+	return uu
+}
+
+// SetBirthdayDisplay sets the "birthday_display" field.
+func (uu *UserUpdate) SetBirthdayDisplay(ud user.BirthdayDisplay) *UserUpdate {
+	uu.mutation.SetBirthdayDisplay(ud)
+	return uu
+}
+
+// SetGender sets the "gender" field.
+func (uu *UserUpdate) SetGender(u user.Gender) *UserUpdate {
+	uu.mutation.SetGender(u)
+	return uu
+}
+
+// SetGenderDisplay sets the "gender_display" field.
+func (uu *UserUpdate) SetGenderDisplay(ud user.GenderDisplay) *UserUpdate {
+	uu.mutation.SetGenderDisplay(ud)
+	return uu
+}
+
 // SetCreatedAt sets the "created_at" field.
 func (uu *UserUpdate) SetCreatedAt(t time.Time) *UserUpdate {
 	uu.mutation.SetCreatedAt(t)
@@ -154,14 +227,6 @@ func (uu *UserUpdate) SetUpdatedAt(t time.Time) *UserUpdate {
 	return uu
 }
 
-// SetNillableUpdatedAt sets the "updated_at" field if the given value is not nil.
-func (uu *UserUpdate) SetNillableUpdatedAt(t *time.Time) *UserUpdate {
-	if t != nil {
-		uu.SetUpdatedAt(*t)
-	}
-	return uu
-}
-
 // Mutation returns the UserMutation object of the builder.
 func (uu *UserUpdate) Mutation() *UserMutation {
 	return uu.mutation
@@ -173,13 +238,20 @@ func (uu *UserUpdate) Save(ctx context.Context) (int, error) {
 		err      error
 		affected int
 	)
+	uu.defaults()
 	if len(uu.hooks) == 0 {
+		if err = uu.check(); err != nil {
+			return 0, err
+		}
 		affected, err = uu.sqlSave(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 			mutation, ok := m.(*UserMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
+			}
+			if err = uu.check(); err != nil {
+				return 0, err
 			}
 			uu.mutation = mutation
 			affected, err = uu.sqlSave(ctx)
@@ -219,6 +291,49 @@ func (uu *UserUpdate) ExecX(ctx context.Context) {
 	if err := uu.Exec(ctx); err != nil {
 		panic(err)
 	}
+}
+
+// defaults sets the default values of the builder before save.
+func (uu *UserUpdate) defaults() {
+	if _, ok := uu.mutation.UpdatedAt(); !ok {
+		v := user.UpdateDefaultUpdatedAt()
+		uu.mutation.SetUpdatedAt(v)
+	}
+}
+
+// check runs all checks and user-defined validators on the builder.
+func (uu *UserUpdate) check() error {
+	if v, ok := uu.mutation.HeightDisplay(); ok {
+		if err := user.HeightDisplayValidator(v); err != nil {
+			return &ValidationError{Name: "height_display", err: fmt.Errorf("ent: validator failed for field \"height_display\": %w", err)}
+		}
+	}
+	if v, ok := uu.mutation.WeightDisplay(); ok {
+		if err := user.WeightDisplayValidator(v); err != nil {
+			return &ValidationError{Name: "weight_display", err: fmt.Errorf("ent: validator failed for field \"weight_display\": %w", err)}
+		}
+	}
+	if v, ok := uu.mutation.WingspanDisplay(); ok {
+		if err := user.WingspanDisplayValidator(v); err != nil {
+			return &ValidationError{Name: "wingspan_display", err: fmt.Errorf("ent: validator failed for field \"wingspan_display\": %w", err)}
+		}
+	}
+	if v, ok := uu.mutation.BirthdayDisplay(); ok {
+		if err := user.BirthdayDisplayValidator(v); err != nil {
+			return &ValidationError{Name: "birthday_display", err: fmt.Errorf("ent: validator failed for field \"birthday_display\": %w", err)}
+		}
+	}
+	if v, ok := uu.mutation.Gender(); ok {
+		if err := user.GenderValidator(v); err != nil {
+			return &ValidationError{Name: "gender", err: fmt.Errorf("ent: validator failed for field \"gender\": %w", err)}
+		}
+	}
+	if v, ok := uu.mutation.GenderDisplay(); ok {
+		if err := user.GenderDisplayValidator(v); err != nil {
+			return &ValidationError{Name: "gender_display", err: fmt.Errorf("ent: validator failed for field \"gender_display\": %w", err)}
+		}
+	}
+	return nil
 }
 
 func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
@@ -316,6 +431,97 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: user.FieldResetPasswordKeyCreatedAt,
 		})
 	}
+	if value, ok := uu.mutation.Height(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: user.FieldHeight,
+		})
+	}
+	if value, ok := uu.mutation.AddedHeight(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: user.FieldHeight,
+		})
+	}
+	if value, ok := uu.mutation.HeightDisplay(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeEnum,
+			Value:  value,
+			Column: user.FieldHeightDisplay,
+		})
+	}
+	if value, ok := uu.mutation.Weight(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: user.FieldWeight,
+		})
+	}
+	if value, ok := uu.mutation.AddedWeight(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: user.FieldWeight,
+		})
+	}
+	if value, ok := uu.mutation.WeightDisplay(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeEnum,
+			Value:  value,
+			Column: user.FieldWeightDisplay,
+		})
+	}
+	if value, ok := uu.mutation.Wingspan(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: user.FieldWingspan,
+		})
+	}
+	if value, ok := uu.mutation.AddedWingspan(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: user.FieldWingspan,
+		})
+	}
+	if value, ok := uu.mutation.WingspanDisplay(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeEnum,
+			Value:  value,
+			Column: user.FieldWingspanDisplay,
+		})
+	}
+	if value, ok := uu.mutation.Birthday(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: user.FieldBirthday,
+		})
+	}
+	if value, ok := uu.mutation.BirthdayDisplay(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeEnum,
+			Value:  value,
+			Column: user.FieldBirthdayDisplay,
+		})
+	}
+	if value, ok := uu.mutation.Gender(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeEnum,
+			Value:  value,
+			Column: user.FieldGender,
+		})
+	}
+	if value, ok := uu.mutation.GenderDisplay(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeEnum,
+			Value:  value,
+			Column: user.FieldGenderDisplay,
+		})
+	}
 	if value, ok := uu.mutation.CreatedAt(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
@@ -401,14 +607,6 @@ func (uuo *UserUpdateOne) SetName(s string) *UserUpdateOne {
 	return uuo
 }
 
-// SetNillableName sets the "name" field if the given value is not nil.
-func (uuo *UserUpdateOne) SetNillableName(s *string) *UserUpdateOne {
-	if s != nil {
-		uuo.SetName(*s)
-	}
-	return uuo
-}
-
 // SetPassword sets the "password" field.
 func (uuo *UserUpdateOne) SetPassword(s string) *UserUpdateOne {
 	uuo.mutation.SetPassword(s)
@@ -456,6 +654,87 @@ func (uuo *UserUpdateOne) SetResetPasswordKeyCreatedAt(t time.Time) *UserUpdateO
 	return uuo
 }
 
+// SetHeight sets the "height" field.
+func (uuo *UserUpdateOne) SetHeight(i int) *UserUpdateOne {
+	uuo.mutation.ResetHeight()
+	uuo.mutation.SetHeight(i)
+	return uuo
+}
+
+// AddHeight adds i to the "height" field.
+func (uuo *UserUpdateOne) AddHeight(i int) *UserUpdateOne {
+	uuo.mutation.AddHeight(i)
+	return uuo
+}
+
+// SetHeightDisplay sets the "height_display" field.
+func (uuo *UserUpdateOne) SetHeightDisplay(ud user.HeightDisplay) *UserUpdateOne {
+	uuo.mutation.SetHeightDisplay(ud)
+	return uuo
+}
+
+// SetWeight sets the "weight" field.
+func (uuo *UserUpdateOne) SetWeight(i int) *UserUpdateOne {
+	uuo.mutation.ResetWeight()
+	uuo.mutation.SetWeight(i)
+	return uuo
+}
+
+// AddWeight adds i to the "weight" field.
+func (uuo *UserUpdateOne) AddWeight(i int) *UserUpdateOne {
+	uuo.mutation.AddWeight(i)
+	return uuo
+}
+
+// SetWeightDisplay sets the "weight_display" field.
+func (uuo *UserUpdateOne) SetWeightDisplay(ud user.WeightDisplay) *UserUpdateOne {
+	uuo.mutation.SetWeightDisplay(ud)
+	return uuo
+}
+
+// SetWingspan sets the "wingspan" field.
+func (uuo *UserUpdateOne) SetWingspan(i int) *UserUpdateOne {
+	uuo.mutation.ResetWingspan()
+	uuo.mutation.SetWingspan(i)
+	return uuo
+}
+
+// AddWingspan adds i to the "wingspan" field.
+func (uuo *UserUpdateOne) AddWingspan(i int) *UserUpdateOne {
+	uuo.mutation.AddWingspan(i)
+	return uuo
+}
+
+// SetWingspanDisplay sets the "wingspan_display" field.
+func (uuo *UserUpdateOne) SetWingspanDisplay(ud user.WingspanDisplay) *UserUpdateOne {
+	uuo.mutation.SetWingspanDisplay(ud)
+	return uuo
+}
+
+// SetBirthday sets the "birthday" field.
+func (uuo *UserUpdateOne) SetBirthday(t time.Time) *UserUpdateOne {
+	uuo.mutation.SetBirthday(t)
+	return uuo
+}
+
+// SetBirthdayDisplay sets the "birthday_display" field.
+func (uuo *UserUpdateOne) SetBirthdayDisplay(ud user.BirthdayDisplay) *UserUpdateOne {
+	uuo.mutation.SetBirthdayDisplay(ud)
+	return uuo
+}
+
+// SetGender sets the "gender" field.
+func (uuo *UserUpdateOne) SetGender(u user.Gender) *UserUpdateOne {
+	uuo.mutation.SetGender(u)
+	return uuo
+}
+
+// SetGenderDisplay sets the "gender_display" field.
+func (uuo *UserUpdateOne) SetGenderDisplay(ud user.GenderDisplay) *UserUpdateOne {
+	uuo.mutation.SetGenderDisplay(ud)
+	return uuo
+}
+
 // SetCreatedAt sets the "created_at" field.
 func (uuo *UserUpdateOne) SetCreatedAt(t time.Time) *UserUpdateOne {
 	uuo.mutation.SetCreatedAt(t)
@@ -473,14 +752,6 @@ func (uuo *UserUpdateOne) SetNillableCreatedAt(t *time.Time) *UserUpdateOne {
 // SetUpdatedAt sets the "updated_at" field.
 func (uuo *UserUpdateOne) SetUpdatedAt(t time.Time) *UserUpdateOne {
 	uuo.mutation.SetUpdatedAt(t)
-	return uuo
-}
-
-// SetNillableUpdatedAt sets the "updated_at" field if the given value is not nil.
-func (uuo *UserUpdateOne) SetNillableUpdatedAt(t *time.Time) *UserUpdateOne {
-	if t != nil {
-		uuo.SetUpdatedAt(*t)
-	}
 	return uuo
 }
 
@@ -502,13 +773,20 @@ func (uuo *UserUpdateOne) Save(ctx context.Context) (*User, error) {
 		err  error
 		node *User
 	)
+	uuo.defaults()
 	if len(uuo.hooks) == 0 {
+		if err = uuo.check(); err != nil {
+			return nil, err
+		}
 		node, err = uuo.sqlSave(ctx)
 	} else {
 		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 			mutation, ok := m.(*UserMutation)
 			if !ok {
 				return nil, fmt.Errorf("unexpected mutation type %T", m)
+			}
+			if err = uuo.check(); err != nil {
+				return nil, err
 			}
 			uuo.mutation = mutation
 			node, err = uuo.sqlSave(ctx)
@@ -548,6 +826,49 @@ func (uuo *UserUpdateOne) ExecX(ctx context.Context) {
 	if err := uuo.Exec(ctx); err != nil {
 		panic(err)
 	}
+}
+
+// defaults sets the default values of the builder before save.
+func (uuo *UserUpdateOne) defaults() {
+	if _, ok := uuo.mutation.UpdatedAt(); !ok {
+		v := user.UpdateDefaultUpdatedAt()
+		uuo.mutation.SetUpdatedAt(v)
+	}
+}
+
+// check runs all checks and user-defined validators on the builder.
+func (uuo *UserUpdateOne) check() error {
+	if v, ok := uuo.mutation.HeightDisplay(); ok {
+		if err := user.HeightDisplayValidator(v); err != nil {
+			return &ValidationError{Name: "height_display", err: fmt.Errorf("ent: validator failed for field \"height_display\": %w", err)}
+		}
+	}
+	if v, ok := uuo.mutation.WeightDisplay(); ok {
+		if err := user.WeightDisplayValidator(v); err != nil {
+			return &ValidationError{Name: "weight_display", err: fmt.Errorf("ent: validator failed for field \"weight_display\": %w", err)}
+		}
+	}
+	if v, ok := uuo.mutation.WingspanDisplay(); ok {
+		if err := user.WingspanDisplayValidator(v); err != nil {
+			return &ValidationError{Name: "wingspan_display", err: fmt.Errorf("ent: validator failed for field \"wingspan_display\": %w", err)}
+		}
+	}
+	if v, ok := uuo.mutation.BirthdayDisplay(); ok {
+		if err := user.BirthdayDisplayValidator(v); err != nil {
+			return &ValidationError{Name: "birthday_display", err: fmt.Errorf("ent: validator failed for field \"birthday_display\": %w", err)}
+		}
+	}
+	if v, ok := uuo.mutation.Gender(); ok {
+		if err := user.GenderValidator(v); err != nil {
+			return &ValidationError{Name: "gender", err: fmt.Errorf("ent: validator failed for field \"gender\": %w", err)}
+		}
+	}
+	if v, ok := uuo.mutation.GenderDisplay(); ok {
+		if err := user.GenderDisplayValidator(v); err != nil {
+			return &ValidationError{Name: "gender_display", err: fmt.Errorf("ent: validator failed for field \"gender_display\": %w", err)}
+		}
+	}
+	return nil
 }
 
 func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) {
@@ -660,6 +981,97 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			Type:   field.TypeTime,
 			Value:  value,
 			Column: user.FieldResetPasswordKeyCreatedAt,
+		})
+	}
+	if value, ok := uuo.mutation.Height(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: user.FieldHeight,
+		})
+	}
+	if value, ok := uuo.mutation.AddedHeight(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: user.FieldHeight,
+		})
+	}
+	if value, ok := uuo.mutation.HeightDisplay(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeEnum,
+			Value:  value,
+			Column: user.FieldHeightDisplay,
+		})
+	}
+	if value, ok := uuo.mutation.Weight(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: user.FieldWeight,
+		})
+	}
+	if value, ok := uuo.mutation.AddedWeight(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: user.FieldWeight,
+		})
+	}
+	if value, ok := uuo.mutation.WeightDisplay(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeEnum,
+			Value:  value,
+			Column: user.FieldWeightDisplay,
+		})
+	}
+	if value, ok := uuo.mutation.Wingspan(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: user.FieldWingspan,
+		})
+	}
+	if value, ok := uuo.mutation.AddedWingspan(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: user.FieldWingspan,
+		})
+	}
+	if value, ok := uuo.mutation.WingspanDisplay(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeEnum,
+			Value:  value,
+			Column: user.FieldWingspanDisplay,
+		})
+	}
+	if value, ok := uuo.mutation.Birthday(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: user.FieldBirthday,
+		})
+	}
+	if value, ok := uuo.mutation.BirthdayDisplay(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeEnum,
+			Value:  value,
+			Column: user.FieldBirthdayDisplay,
+		})
+	}
+	if value, ok := uuo.mutation.Gender(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeEnum,
+			Value:  value,
+			Column: user.FieldGender,
+		})
+	}
+	if value, ok := uuo.mutation.GenderDisplay(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeEnum,
+			Value:  value,
+			Column: user.FieldGenderDisplay,
 		})
 	}
 	if value, ok := uuo.mutation.CreatedAt(); ok {

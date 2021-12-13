@@ -36,6 +36,26 @@ type User struct {
 	ResetPasswordKey string `json:"reset_password_key,omitempty"`
 	// ResetPasswordKeyCreatedAt holds the value of the "reset_password_key_created_at" field.
 	ResetPasswordKeyCreatedAt time.Time `json:"reset_password_key_created_at,omitempty"`
+	// Height holds the value of the "height" field.
+	Height int `json:"height,omitempty"`
+	// HeightDisplay holds the value of the "height_display" field.
+	HeightDisplay user.HeightDisplay `json:"height_display,omitempty"`
+	// Weight holds the value of the "weight" field.
+	Weight int `json:"weight,omitempty"`
+	// WeightDisplay holds the value of the "weight_display" field.
+	WeightDisplay user.WeightDisplay `json:"weight_display,omitempty"`
+	// Wingspan holds the value of the "wingspan" field.
+	Wingspan int `json:"wingspan,omitempty"`
+	// WingspanDisplay holds the value of the "wingspan_display" field.
+	WingspanDisplay user.WingspanDisplay `json:"wingspan_display,omitempty"`
+	// Birthday holds the value of the "birthday" field.
+	Birthday time.Time `json:"birthday,omitempty"`
+	// BirthdayDisplay holds the value of the "birthday_display" field.
+	BirthdayDisplay user.BirthdayDisplay `json:"birthday_display,omitempty"`
+	// Gender holds the value of the "gender" field.
+	Gender user.Gender `json:"gender,omitempty"`
+	// GenderDisplay holds the value of the "gender_display" field.
+	GenderDisplay user.GenderDisplay `json:"gender_display,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// UpdatedAt holds the value of the "updated_at" field.
@@ -49,11 +69,11 @@ func (*User) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case user.FieldActive, user.FieldEmailAuthenticationStatus:
 			values[i] = new(sql.NullBool)
-		case user.FieldID, user.FieldRole:
+		case user.FieldID, user.FieldRole, user.FieldHeight, user.FieldWeight, user.FieldWingspan:
 			values[i] = new(sql.NullInt64)
-		case user.FieldEmail, user.FieldEmailAuthenticationKey, user.FieldName, user.FieldPassword, user.FieldResetPasswordKey:
+		case user.FieldEmail, user.FieldEmailAuthenticationKey, user.FieldName, user.FieldPassword, user.FieldResetPasswordKey, user.FieldHeightDisplay, user.FieldWeightDisplay, user.FieldWingspanDisplay, user.FieldBirthdayDisplay, user.FieldGender, user.FieldGenderDisplay:
 			values[i] = new(sql.NullString)
-		case user.FieldEmailAuthenticationKeyCreatedAt, user.FieldResetPasswordKeyCreatedAt, user.FieldCreatedAt, user.FieldUpdatedAt:
+		case user.FieldEmailAuthenticationKeyCreatedAt, user.FieldResetPasswordKeyCreatedAt, user.FieldBirthday, user.FieldCreatedAt, user.FieldUpdatedAt:
 			values[i] = new(sql.NullTime)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type User", columns[i])
@@ -136,6 +156,66 @@ func (u *User) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				u.ResetPasswordKeyCreatedAt = value.Time
 			}
+		case user.FieldHeight:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field height", values[i])
+			} else if value.Valid {
+				u.Height = int(value.Int64)
+			}
+		case user.FieldHeightDisplay:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field height_display", values[i])
+			} else if value.Valid {
+				u.HeightDisplay = user.HeightDisplay(value.String)
+			}
+		case user.FieldWeight:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field weight", values[i])
+			} else if value.Valid {
+				u.Weight = int(value.Int64)
+			}
+		case user.FieldWeightDisplay:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field weight_display", values[i])
+			} else if value.Valid {
+				u.WeightDisplay = user.WeightDisplay(value.String)
+			}
+		case user.FieldWingspan:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field wingspan", values[i])
+			} else if value.Valid {
+				u.Wingspan = int(value.Int64)
+			}
+		case user.FieldWingspanDisplay:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field wingspan_display", values[i])
+			} else if value.Valid {
+				u.WingspanDisplay = user.WingspanDisplay(value.String)
+			}
+		case user.FieldBirthday:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field birthday", values[i])
+			} else if value.Valid {
+				u.Birthday = value.Time
+			}
+		case user.FieldBirthdayDisplay:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field birthday_display", values[i])
+			} else if value.Valid {
+				u.BirthdayDisplay = user.BirthdayDisplay(value.String)
+			}
+		case user.FieldGender:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field gender", values[i])
+			} else if value.Valid {
+				u.Gender = user.Gender(value.String)
+			}
+		case user.FieldGenderDisplay:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field gender_display", values[i])
+			} else if value.Valid {
+				u.GenderDisplay = user.GenderDisplay(value.String)
+			}
 		case user.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field created_at", values[i])
@@ -196,6 +276,26 @@ func (u *User) String() string {
 	builder.WriteString(u.ResetPasswordKey)
 	builder.WriteString(", reset_password_key_created_at=")
 	builder.WriteString(u.ResetPasswordKeyCreatedAt.Format(time.ANSIC))
+	builder.WriteString(", height=")
+	builder.WriteString(fmt.Sprintf("%v", u.Height))
+	builder.WriteString(", height_display=")
+	builder.WriteString(fmt.Sprintf("%v", u.HeightDisplay))
+	builder.WriteString(", weight=")
+	builder.WriteString(fmt.Sprintf("%v", u.Weight))
+	builder.WriteString(", weight_display=")
+	builder.WriteString(fmt.Sprintf("%v", u.WeightDisplay))
+	builder.WriteString(", wingspan=")
+	builder.WriteString(fmt.Sprintf("%v", u.Wingspan))
+	builder.WriteString(", wingspan_display=")
+	builder.WriteString(fmt.Sprintf("%v", u.WingspanDisplay))
+	builder.WriteString(", birthday=")
+	builder.WriteString(u.Birthday.Format(time.ANSIC))
+	builder.WriteString(", birthday_display=")
+	builder.WriteString(fmt.Sprintf("%v", u.BirthdayDisplay))
+	builder.WriteString(", gender=")
+	builder.WriteString(fmt.Sprintf("%v", u.Gender))
+	builder.WriteString(", gender_display=")
+	builder.WriteString(fmt.Sprintf("%v", u.GenderDisplay))
 	builder.WriteString(", created_at=")
 	builder.WriteString(u.CreatedAt.Format(time.ANSIC))
 	builder.WriteString(", updated_at=")

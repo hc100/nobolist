@@ -426,16 +426,6 @@ func (u *UserQuery) Paginate(
 }
 
 var (
-	// UserOrderFieldActive orders User by active.
-	UserOrderFieldActive = &UserOrderField{
-		field: user.FieldActive,
-		toCursor: func(u *User) Cursor {
-			return Cursor{
-				ID:    u.ID,
-				Value: u.Active,
-			}
-		},
-	}
 	// UserOrderFieldEmail orders User by email.
 	UserOrderFieldEmail = &UserOrderField{
 		field: user.FieldEmail,
@@ -456,42 +446,16 @@ var (
 			}
 		},
 	}
-	// UserOrderFieldCreatedAt orders User by created_at.
-	UserOrderFieldCreatedAt = &UserOrderField{
-		field: user.FieldCreatedAt,
-		toCursor: func(u *User) Cursor {
-			return Cursor{
-				ID:    u.ID,
-				Value: u.CreatedAt,
-			}
-		},
-	}
-	// UserOrderFieldUpdatedAt orders User by updated_at.
-	UserOrderFieldUpdatedAt = &UserOrderField{
-		field: user.FieldUpdatedAt,
-		toCursor: func(u *User) Cursor {
-			return Cursor{
-				ID:    u.ID,
-				Value: u.UpdatedAt,
-			}
-		},
-	}
 )
 
 // String implement fmt.Stringer interface.
 func (f UserOrderField) String() string {
 	var str string
 	switch f.field {
-	case user.FieldActive:
-		str = "ACTIVE"
 	case user.FieldEmail:
 		str = "EMAIL"
 	case user.FieldName:
 		str = "NAME"
-	case user.FieldCreatedAt:
-		str = "CREATED_AT"
-	case user.FieldUpdatedAt:
-		str = "UPDATED_AT"
 	}
 	return str
 }
@@ -508,16 +472,10 @@ func (f *UserOrderField) UnmarshalGQL(v interface{}) error {
 		return fmt.Errorf("UserOrderField %T must be a string", v)
 	}
 	switch str {
-	case "ACTIVE":
-		*f = *UserOrderFieldActive
 	case "EMAIL":
 		*f = *UserOrderFieldEmail
 	case "NAME":
 		*f = *UserOrderFieldName
-	case "CREATED_AT":
-		*f = *UserOrderFieldCreatedAt
-	case "UPDATED_AT":
-		*f = *UserOrderFieldUpdatedAt
 	default:
 		return fmt.Errorf("%s is not a valid UserOrderField", str)
 	}

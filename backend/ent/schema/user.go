@@ -17,10 +17,7 @@ type User struct {
 func (User) Fields() []ent.Field {
 	return []ent.Field{
 		field.Bool("active").
-			Default(false).
-			Annotations(
-				entgql.OrderField("ACTIVE"),
-			),
+			Default(false),
 		field.String("email").
 			Unique().
 			Annotations(
@@ -32,7 +29,6 @@ func (User) Fields() []ent.Field {
 		field.Bool("email_authentication_status").
 			Default(false),
 		field.String("name").
-			Default("").
 			Annotations(
 				entgql.OrderField("NAME"),
 			),
@@ -43,16 +39,27 @@ func (User) Fields() []ent.Field {
 		field.String("reset_password_key").
 			Unique(),
 		field.Time("reset_password_key_created_at"),
+		field.Int("height"),
+		field.Enum("height_display").
+			Values("PRIVATE", "FRIENDS", "PUBLIC"),
+		field.Int("weight"),
+		field.Enum("weight_display").
+			Values("PRIVATE", "FRIENDS", "PUBLIC"),
+		field.Int("wingspan"),
+		field.Enum("wingspan_display").
+			Values("PRIVATE", "FRIENDS", "PUBLIC"),
+		field.Time("birthday"),
+		field.Enum("birthday_display").
+			Values("PRIVATE", "FRIENDS", "PUBLIC"),
+		field.Enum("gender").
+			Values("MALE", "FEMALE"),
+		field.Enum("gender_display").
+			Values("PRIVATE", "FRIENDS", "PUBLIC"),
 		field.Time("created_at").
-			Default(time.Now).
-			Annotations(
-				entgql.OrderField("CREATED_AT"),
-			),
+			Default(time.Now),
 		field.Time("updated_at").
 			Default(time.Now).
-			Annotations(
-				entgql.OrderField("UPDATED_AT"),
-			),
+			UpdateDefault(time.Now),
 	}
 }
 

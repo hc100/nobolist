@@ -23,10 +23,6 @@ func init() {
 	userDescEmailAuthenticationStatus := userFields[4].Descriptor()
 	// user.DefaultEmailAuthenticationStatus holds the default value on creation for the email_authentication_status field.
 	user.DefaultEmailAuthenticationStatus = userDescEmailAuthenticationStatus.Default.(bool)
-	// userDescName is the schema descriptor for name field.
-	userDescName := userFields[5].Descriptor()
-	// user.DefaultName holds the default value on creation for the name field.
-	user.DefaultName = userDescName.Default.(string)
 	// userDescPassword is the schema descriptor for password field.
 	userDescPassword := userFields[6].Descriptor()
 	// user.DefaultPassword holds the default value on creation for the password field.
@@ -36,11 +32,13 @@ func init() {
 	// user.DefaultRole holds the default value on creation for the role field.
 	user.DefaultRole = userDescRole.Default.(int)
 	// userDescCreatedAt is the schema descriptor for created_at field.
-	userDescCreatedAt := userFields[10].Descriptor()
+	userDescCreatedAt := userFields[20].Descriptor()
 	// user.DefaultCreatedAt holds the default value on creation for the created_at field.
 	user.DefaultCreatedAt = userDescCreatedAt.Default.(func() time.Time)
 	// userDescUpdatedAt is the schema descriptor for updated_at field.
-	userDescUpdatedAt := userFields[11].Descriptor()
+	userDescUpdatedAt := userFields[21].Descriptor()
 	// user.DefaultUpdatedAt holds the default value on creation for the updated_at field.
 	user.DefaultUpdatedAt = userDescUpdatedAt.Default.(func() time.Time)
+	// user.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	user.UpdateDefaultUpdatedAt = userDescUpdatedAt.UpdateDefault.(func() time.Time)
 }

@@ -2,14 +2,130 @@
 
 package backend
 
+import (
+	"fmt"
+	"io"
+	"strconv"
+)
+
+type Myself struct {
+	ID              int    `json:"id"`
+	Email           string `json:"email"`
+	Name            string `json:"name"`
+	Height          int    `json:"height"`
+	HeightDisplay   string `json:"heightDisplay"`
+	Weight          int    `json:"weight"`
+	WeightDisplay   string `json:"weightDisplay"`
+	Wingspan        int    `json:"wingspan"`
+	WingspanDisplay string `json:"wingspanDisplay"`
+	Birthday        string `json:"birthday"`
+	BirthdayDisplay string `json:"birthdayDisplay"`
+	Gender          string `json:"gender"`
+	GenderDisplay   string `json:"genderDisplay"`
+}
+
 type RegisterUserInput struct {
-	Key      string `json:"key"`
-	Name     string `json:"name"`
-	Password string `json:"password"`
+	Key             string      `json:"key"`
+	Name            string      `json:"name"`
+	Password        string      `json:"password"`
+	Height          int         `json:"height"`
+	HeightDisplay   DisplayFlag `json:"heightDisplay"`
+	Weight          int         `json:"weight"`
+	WeightDisplay   DisplayFlag `json:"weightDisplay"`
+	Wingspan        int         `json:"wingspan"`
+	WingspanDisplay DisplayFlag `json:"wingspanDisplay"`
+	Birthday        string      `json:"birthday"`
+	BirthdayDisplay DisplayFlag `json:"birthdayDisplay"`
+	Gender          Gender      `json:"gender"`
+	GenderDisplay   DisplayFlag `json:"genderDisplay"`
 }
 
 type Token struct {
 	AccessToken  string `json:"accessToken"`
 	RefreshToken string `json:"refreshToken"`
 	Role         int    `json:"role"`
+}
+
+type DisplayFlag string
+
+const (
+	DisplayFlagPrivate DisplayFlag = "PRIVATE"
+	DisplayFlagFriends DisplayFlag = "FRIENDS"
+	DisplayFlagPublic  DisplayFlag = "PUBLIC"
+)
+
+var AllDisplayFlag = []DisplayFlag{
+	DisplayFlagPrivate,
+	DisplayFlagFriends,
+	DisplayFlagPublic,
+}
+
+func (e DisplayFlag) IsValid() bool {
+	switch e {
+	case DisplayFlagPrivate, DisplayFlagFriends, DisplayFlagPublic:
+		return true
+	}
+	return false
+}
+
+func (e DisplayFlag) String() string {
+	return string(e)
+}
+
+func (e *DisplayFlag) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = DisplayFlag(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid DisplayFlag", str)
+	}
+	return nil
+}
+
+func (e DisplayFlag) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+type Gender string
+
+const (
+	GenderMale   Gender = "MALE"
+	GenderFemale Gender = "FEMALE"
+)
+
+var AllGender = []Gender{
+	GenderMale,
+	GenderFemale,
+}
+
+func (e Gender) IsValid() bool {
+	switch e {
+	case GenderMale, GenderFemale:
+		return true
+	}
+	return false
+}
+
+func (e Gender) String() string {
+	return string(e)
+}
+
+func (e *Gender) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = Gender(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid Gender", str)
+	}
+	return nil
+}
+
+func (e Gender) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
 }

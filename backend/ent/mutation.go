@@ -43,6 +43,19 @@ type UserMutation struct {
 	addrole                             *int
 	reset_password_key                  *string
 	reset_password_key_created_at       *time.Time
+	height                              *int
+	addheight                           *int
+	height_display                      *user.HeightDisplay
+	weight                              *int
+	addweight                           *int
+	weight_display                      *user.WeightDisplay
+	wingspan                            *int
+	addwingspan                         *int
+	wingspan_display                    *user.WingspanDisplay
+	birthday                            *time.Time
+	birthday_display                    *user.BirthdayDisplay
+	gender                              *user.Gender
+	gender_display                      *user.GenderDisplay
 	created_at                          *time.Time
 	updated_at                          *time.Time
 	clearedFields                       map[string]struct{}
@@ -510,6 +523,426 @@ func (m *UserMutation) ResetResetPasswordKeyCreatedAt() {
 	m.reset_password_key_created_at = nil
 }
 
+// SetHeight sets the "height" field.
+func (m *UserMutation) SetHeight(i int) {
+	m.height = &i
+	m.addheight = nil
+}
+
+// Height returns the value of the "height" field in the mutation.
+func (m *UserMutation) Height() (r int, exists bool) {
+	v := m.height
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldHeight returns the old "height" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldHeight(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldHeight is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldHeight requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldHeight: %w", err)
+	}
+	return oldValue.Height, nil
+}
+
+// AddHeight adds i to the "height" field.
+func (m *UserMutation) AddHeight(i int) {
+	if m.addheight != nil {
+		*m.addheight += i
+	} else {
+		m.addheight = &i
+	}
+}
+
+// AddedHeight returns the value that was added to the "height" field in this mutation.
+func (m *UserMutation) AddedHeight() (r int, exists bool) {
+	v := m.addheight
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetHeight resets all changes to the "height" field.
+func (m *UserMutation) ResetHeight() {
+	m.height = nil
+	m.addheight = nil
+}
+
+// SetHeightDisplay sets the "height_display" field.
+func (m *UserMutation) SetHeightDisplay(ud user.HeightDisplay) {
+	m.height_display = &ud
+}
+
+// HeightDisplay returns the value of the "height_display" field in the mutation.
+func (m *UserMutation) HeightDisplay() (r user.HeightDisplay, exists bool) {
+	v := m.height_display
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldHeightDisplay returns the old "height_display" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldHeightDisplay(ctx context.Context) (v user.HeightDisplay, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldHeightDisplay is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldHeightDisplay requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldHeightDisplay: %w", err)
+	}
+	return oldValue.HeightDisplay, nil
+}
+
+// ResetHeightDisplay resets all changes to the "height_display" field.
+func (m *UserMutation) ResetHeightDisplay() {
+	m.height_display = nil
+}
+
+// SetWeight sets the "weight" field.
+func (m *UserMutation) SetWeight(i int) {
+	m.weight = &i
+	m.addweight = nil
+}
+
+// Weight returns the value of the "weight" field in the mutation.
+func (m *UserMutation) Weight() (r int, exists bool) {
+	v := m.weight
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldWeight returns the old "weight" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldWeight(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldWeight is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldWeight requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldWeight: %w", err)
+	}
+	return oldValue.Weight, nil
+}
+
+// AddWeight adds i to the "weight" field.
+func (m *UserMutation) AddWeight(i int) {
+	if m.addweight != nil {
+		*m.addweight += i
+	} else {
+		m.addweight = &i
+	}
+}
+
+// AddedWeight returns the value that was added to the "weight" field in this mutation.
+func (m *UserMutation) AddedWeight() (r int, exists bool) {
+	v := m.addweight
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetWeight resets all changes to the "weight" field.
+func (m *UserMutation) ResetWeight() {
+	m.weight = nil
+	m.addweight = nil
+}
+
+// SetWeightDisplay sets the "weight_display" field.
+func (m *UserMutation) SetWeightDisplay(ud user.WeightDisplay) {
+	m.weight_display = &ud
+}
+
+// WeightDisplay returns the value of the "weight_display" field in the mutation.
+func (m *UserMutation) WeightDisplay() (r user.WeightDisplay, exists bool) {
+	v := m.weight_display
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldWeightDisplay returns the old "weight_display" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldWeightDisplay(ctx context.Context) (v user.WeightDisplay, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldWeightDisplay is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldWeightDisplay requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldWeightDisplay: %w", err)
+	}
+	return oldValue.WeightDisplay, nil
+}
+
+// ResetWeightDisplay resets all changes to the "weight_display" field.
+func (m *UserMutation) ResetWeightDisplay() {
+	m.weight_display = nil
+}
+
+// SetWingspan sets the "wingspan" field.
+func (m *UserMutation) SetWingspan(i int) {
+	m.wingspan = &i
+	m.addwingspan = nil
+}
+
+// Wingspan returns the value of the "wingspan" field in the mutation.
+func (m *UserMutation) Wingspan() (r int, exists bool) {
+	v := m.wingspan
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldWingspan returns the old "wingspan" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldWingspan(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldWingspan is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldWingspan requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldWingspan: %w", err)
+	}
+	return oldValue.Wingspan, nil
+}
+
+// AddWingspan adds i to the "wingspan" field.
+func (m *UserMutation) AddWingspan(i int) {
+	if m.addwingspan != nil {
+		*m.addwingspan += i
+	} else {
+		m.addwingspan = &i
+	}
+}
+
+// AddedWingspan returns the value that was added to the "wingspan" field in this mutation.
+func (m *UserMutation) AddedWingspan() (r int, exists bool) {
+	v := m.addwingspan
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetWingspan resets all changes to the "wingspan" field.
+func (m *UserMutation) ResetWingspan() {
+	m.wingspan = nil
+	m.addwingspan = nil
+}
+
+// SetWingspanDisplay sets the "wingspan_display" field.
+func (m *UserMutation) SetWingspanDisplay(ud user.WingspanDisplay) {
+	m.wingspan_display = &ud
+}
+
+// WingspanDisplay returns the value of the "wingspan_display" field in the mutation.
+func (m *UserMutation) WingspanDisplay() (r user.WingspanDisplay, exists bool) {
+	v := m.wingspan_display
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldWingspanDisplay returns the old "wingspan_display" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldWingspanDisplay(ctx context.Context) (v user.WingspanDisplay, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldWingspanDisplay is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldWingspanDisplay requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldWingspanDisplay: %w", err)
+	}
+	return oldValue.WingspanDisplay, nil
+}
+
+// ResetWingspanDisplay resets all changes to the "wingspan_display" field.
+func (m *UserMutation) ResetWingspanDisplay() {
+	m.wingspan_display = nil
+}
+
+// SetBirthday sets the "birthday" field.
+func (m *UserMutation) SetBirthday(t time.Time) {
+	m.birthday = &t
+}
+
+// Birthday returns the value of the "birthday" field in the mutation.
+func (m *UserMutation) Birthday() (r time.Time, exists bool) {
+	v := m.birthday
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldBirthday returns the old "birthday" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldBirthday(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldBirthday is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldBirthday requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldBirthday: %w", err)
+	}
+	return oldValue.Birthday, nil
+}
+
+// ResetBirthday resets all changes to the "birthday" field.
+func (m *UserMutation) ResetBirthday() {
+	m.birthday = nil
+}
+
+// SetBirthdayDisplay sets the "birthday_display" field.
+func (m *UserMutation) SetBirthdayDisplay(ud user.BirthdayDisplay) {
+	m.birthday_display = &ud
+}
+
+// BirthdayDisplay returns the value of the "birthday_display" field in the mutation.
+func (m *UserMutation) BirthdayDisplay() (r user.BirthdayDisplay, exists bool) {
+	v := m.birthday_display
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldBirthdayDisplay returns the old "birthday_display" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldBirthdayDisplay(ctx context.Context) (v user.BirthdayDisplay, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldBirthdayDisplay is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldBirthdayDisplay requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldBirthdayDisplay: %w", err)
+	}
+	return oldValue.BirthdayDisplay, nil
+}
+
+// ResetBirthdayDisplay resets all changes to the "birthday_display" field.
+func (m *UserMutation) ResetBirthdayDisplay() {
+	m.birthday_display = nil
+}
+
+// SetGender sets the "gender" field.
+func (m *UserMutation) SetGender(u user.Gender) {
+	m.gender = &u
+}
+
+// Gender returns the value of the "gender" field in the mutation.
+func (m *UserMutation) Gender() (r user.Gender, exists bool) {
+	v := m.gender
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldGender returns the old "gender" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldGender(ctx context.Context) (v user.Gender, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldGender is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldGender requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldGender: %w", err)
+	}
+	return oldValue.Gender, nil
+}
+
+// ResetGender resets all changes to the "gender" field.
+func (m *UserMutation) ResetGender() {
+	m.gender = nil
+}
+
+// SetGenderDisplay sets the "gender_display" field.
+func (m *UserMutation) SetGenderDisplay(ud user.GenderDisplay) {
+	m.gender_display = &ud
+}
+
+// GenderDisplay returns the value of the "gender_display" field in the mutation.
+func (m *UserMutation) GenderDisplay() (r user.GenderDisplay, exists bool) {
+	v := m.gender_display
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldGenderDisplay returns the old "gender_display" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldGenderDisplay(ctx context.Context) (v user.GenderDisplay, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldGenderDisplay is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldGenderDisplay requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldGenderDisplay: %w", err)
+	}
+	return oldValue.GenderDisplay, nil
+}
+
+// ResetGenderDisplay resets all changes to the "gender_display" field.
+func (m *UserMutation) ResetGenderDisplay() {
+	m.gender_display = nil
+}
+
 // SetCreatedAt sets the "created_at" field.
 func (m *UserMutation) SetCreatedAt(t time.Time) {
 	m.created_at = &t
@@ -601,7 +1034,7 @@ func (m *UserMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *UserMutation) Fields() []string {
-	fields := make([]string, 0, 12)
+	fields := make([]string, 0, 22)
 	if m.active != nil {
 		fields = append(fields, user.FieldActive)
 	}
@@ -631,6 +1064,36 @@ func (m *UserMutation) Fields() []string {
 	}
 	if m.reset_password_key_created_at != nil {
 		fields = append(fields, user.FieldResetPasswordKeyCreatedAt)
+	}
+	if m.height != nil {
+		fields = append(fields, user.FieldHeight)
+	}
+	if m.height_display != nil {
+		fields = append(fields, user.FieldHeightDisplay)
+	}
+	if m.weight != nil {
+		fields = append(fields, user.FieldWeight)
+	}
+	if m.weight_display != nil {
+		fields = append(fields, user.FieldWeightDisplay)
+	}
+	if m.wingspan != nil {
+		fields = append(fields, user.FieldWingspan)
+	}
+	if m.wingspan_display != nil {
+		fields = append(fields, user.FieldWingspanDisplay)
+	}
+	if m.birthday != nil {
+		fields = append(fields, user.FieldBirthday)
+	}
+	if m.birthday_display != nil {
+		fields = append(fields, user.FieldBirthdayDisplay)
+	}
+	if m.gender != nil {
+		fields = append(fields, user.FieldGender)
+	}
+	if m.gender_display != nil {
+		fields = append(fields, user.FieldGenderDisplay)
 	}
 	if m.created_at != nil {
 		fields = append(fields, user.FieldCreatedAt)
@@ -666,6 +1129,26 @@ func (m *UserMutation) Field(name string) (ent.Value, bool) {
 		return m.ResetPasswordKey()
 	case user.FieldResetPasswordKeyCreatedAt:
 		return m.ResetPasswordKeyCreatedAt()
+	case user.FieldHeight:
+		return m.Height()
+	case user.FieldHeightDisplay:
+		return m.HeightDisplay()
+	case user.FieldWeight:
+		return m.Weight()
+	case user.FieldWeightDisplay:
+		return m.WeightDisplay()
+	case user.FieldWingspan:
+		return m.Wingspan()
+	case user.FieldWingspanDisplay:
+		return m.WingspanDisplay()
+	case user.FieldBirthday:
+		return m.Birthday()
+	case user.FieldBirthdayDisplay:
+		return m.BirthdayDisplay()
+	case user.FieldGender:
+		return m.Gender()
+	case user.FieldGenderDisplay:
+		return m.GenderDisplay()
 	case user.FieldCreatedAt:
 		return m.CreatedAt()
 	case user.FieldUpdatedAt:
@@ -699,6 +1182,26 @@ func (m *UserMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldResetPasswordKey(ctx)
 	case user.FieldResetPasswordKeyCreatedAt:
 		return m.OldResetPasswordKeyCreatedAt(ctx)
+	case user.FieldHeight:
+		return m.OldHeight(ctx)
+	case user.FieldHeightDisplay:
+		return m.OldHeightDisplay(ctx)
+	case user.FieldWeight:
+		return m.OldWeight(ctx)
+	case user.FieldWeightDisplay:
+		return m.OldWeightDisplay(ctx)
+	case user.FieldWingspan:
+		return m.OldWingspan(ctx)
+	case user.FieldWingspanDisplay:
+		return m.OldWingspanDisplay(ctx)
+	case user.FieldBirthday:
+		return m.OldBirthday(ctx)
+	case user.FieldBirthdayDisplay:
+		return m.OldBirthdayDisplay(ctx)
+	case user.FieldGender:
+		return m.OldGender(ctx)
+	case user.FieldGenderDisplay:
+		return m.OldGenderDisplay(ctx)
 	case user.FieldCreatedAt:
 		return m.OldCreatedAt(ctx)
 	case user.FieldUpdatedAt:
@@ -782,6 +1285,76 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetResetPasswordKeyCreatedAt(v)
 		return nil
+	case user.FieldHeight:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetHeight(v)
+		return nil
+	case user.FieldHeightDisplay:
+		v, ok := value.(user.HeightDisplay)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetHeightDisplay(v)
+		return nil
+	case user.FieldWeight:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetWeight(v)
+		return nil
+	case user.FieldWeightDisplay:
+		v, ok := value.(user.WeightDisplay)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetWeightDisplay(v)
+		return nil
+	case user.FieldWingspan:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetWingspan(v)
+		return nil
+	case user.FieldWingspanDisplay:
+		v, ok := value.(user.WingspanDisplay)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetWingspanDisplay(v)
+		return nil
+	case user.FieldBirthday:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetBirthday(v)
+		return nil
+	case user.FieldBirthdayDisplay:
+		v, ok := value.(user.BirthdayDisplay)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetBirthdayDisplay(v)
+		return nil
+	case user.FieldGender:
+		v, ok := value.(user.Gender)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetGender(v)
+		return nil
+	case user.FieldGenderDisplay:
+		v, ok := value.(user.GenderDisplay)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetGenderDisplay(v)
+		return nil
 	case user.FieldCreatedAt:
 		v, ok := value.(time.Time)
 		if !ok {
@@ -807,6 +1380,15 @@ func (m *UserMutation) AddedFields() []string {
 	if m.addrole != nil {
 		fields = append(fields, user.FieldRole)
 	}
+	if m.addheight != nil {
+		fields = append(fields, user.FieldHeight)
+	}
+	if m.addweight != nil {
+		fields = append(fields, user.FieldWeight)
+	}
+	if m.addwingspan != nil {
+		fields = append(fields, user.FieldWingspan)
+	}
 	return fields
 }
 
@@ -817,6 +1399,12 @@ func (m *UserMutation) AddedField(name string) (ent.Value, bool) {
 	switch name {
 	case user.FieldRole:
 		return m.AddedRole()
+	case user.FieldHeight:
+		return m.AddedHeight()
+	case user.FieldWeight:
+		return m.AddedWeight()
+	case user.FieldWingspan:
+		return m.AddedWingspan()
 	}
 	return nil, false
 }
@@ -832,6 +1420,27 @@ func (m *UserMutation) AddField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddRole(v)
+		return nil
+	case user.FieldHeight:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddHeight(v)
+		return nil
+	case user.FieldWeight:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddWeight(v)
+		return nil
+	case user.FieldWingspan:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddWingspan(v)
 		return nil
 	}
 	return fmt.Errorf("unknown User numeric field %s", name)
@@ -889,6 +1498,36 @@ func (m *UserMutation) ResetField(name string) error {
 		return nil
 	case user.FieldResetPasswordKeyCreatedAt:
 		m.ResetResetPasswordKeyCreatedAt()
+		return nil
+	case user.FieldHeight:
+		m.ResetHeight()
+		return nil
+	case user.FieldHeightDisplay:
+		m.ResetHeightDisplay()
+		return nil
+	case user.FieldWeight:
+		m.ResetWeight()
+		return nil
+	case user.FieldWeightDisplay:
+		m.ResetWeightDisplay()
+		return nil
+	case user.FieldWingspan:
+		m.ResetWingspan()
+		return nil
+	case user.FieldWingspanDisplay:
+		m.ResetWingspanDisplay()
+		return nil
+	case user.FieldBirthday:
+		m.ResetBirthday()
+		return nil
+	case user.FieldBirthdayDisplay:
+		m.ResetBirthdayDisplay()
+		return nil
+	case user.FieldGender:
+		m.ResetGender()
+		return nil
+	case user.FieldGenderDisplay:
+		m.ResetGenderDisplay()
 		return nil
 	case user.FieldCreatedAt:
 		m.ResetCreatedAt()

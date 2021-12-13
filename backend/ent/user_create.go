@@ -72,14 +72,6 @@ func (uc *UserCreate) SetName(s string) *UserCreate {
 	return uc
 }
 
-// SetNillableName sets the "name" field if the given value is not nil.
-func (uc *UserCreate) SetNillableName(s *string) *UserCreate {
-	if s != nil {
-		uc.SetName(*s)
-	}
-	return uc
-}
-
 // SetPassword sets the "password" field.
 func (uc *UserCreate) SetPassword(s string) *UserCreate {
 	uc.mutation.SetPassword(s)
@@ -117,6 +109,66 @@ func (uc *UserCreate) SetResetPasswordKey(s string) *UserCreate {
 // SetResetPasswordKeyCreatedAt sets the "reset_password_key_created_at" field.
 func (uc *UserCreate) SetResetPasswordKeyCreatedAt(t time.Time) *UserCreate {
 	uc.mutation.SetResetPasswordKeyCreatedAt(t)
+	return uc
+}
+
+// SetHeight sets the "height" field.
+func (uc *UserCreate) SetHeight(i int) *UserCreate {
+	uc.mutation.SetHeight(i)
+	return uc
+}
+
+// SetHeightDisplay sets the "height_display" field.
+func (uc *UserCreate) SetHeightDisplay(ud user.HeightDisplay) *UserCreate {
+	uc.mutation.SetHeightDisplay(ud)
+	return uc
+}
+
+// SetWeight sets the "weight" field.
+func (uc *UserCreate) SetWeight(i int) *UserCreate {
+	uc.mutation.SetWeight(i)
+	return uc
+}
+
+// SetWeightDisplay sets the "weight_display" field.
+func (uc *UserCreate) SetWeightDisplay(ud user.WeightDisplay) *UserCreate {
+	uc.mutation.SetWeightDisplay(ud)
+	return uc
+}
+
+// SetWingspan sets the "wingspan" field.
+func (uc *UserCreate) SetWingspan(i int) *UserCreate {
+	uc.mutation.SetWingspan(i)
+	return uc
+}
+
+// SetWingspanDisplay sets the "wingspan_display" field.
+func (uc *UserCreate) SetWingspanDisplay(ud user.WingspanDisplay) *UserCreate {
+	uc.mutation.SetWingspanDisplay(ud)
+	return uc
+}
+
+// SetBirthday sets the "birthday" field.
+func (uc *UserCreate) SetBirthday(t time.Time) *UserCreate {
+	uc.mutation.SetBirthday(t)
+	return uc
+}
+
+// SetBirthdayDisplay sets the "birthday_display" field.
+func (uc *UserCreate) SetBirthdayDisplay(ud user.BirthdayDisplay) *UserCreate {
+	uc.mutation.SetBirthdayDisplay(ud)
+	return uc
+}
+
+// SetGender sets the "gender" field.
+func (uc *UserCreate) SetGender(u user.Gender) *UserCreate {
+	uc.mutation.SetGender(u)
+	return uc
+}
+
+// SetGenderDisplay sets the "gender_display" field.
+func (uc *UserCreate) SetGenderDisplay(ud user.GenderDisplay) *UserCreate {
+	uc.mutation.SetGenderDisplay(ud)
 	return uc
 }
 
@@ -227,10 +279,6 @@ func (uc *UserCreate) defaults() {
 		v := user.DefaultEmailAuthenticationStatus
 		uc.mutation.SetEmailAuthenticationStatus(v)
 	}
-	if _, ok := uc.mutation.Name(); !ok {
-		v := user.DefaultName
-		uc.mutation.SetName(v)
-	}
 	if _, ok := uc.mutation.Password(); !ok {
 		v := user.DefaultPassword
 		uc.mutation.SetPassword(v)
@@ -280,6 +328,66 @@ func (uc *UserCreate) check() error {
 	}
 	if _, ok := uc.mutation.ResetPasswordKeyCreatedAt(); !ok {
 		return &ValidationError{Name: "reset_password_key_created_at", err: errors.New(`ent: missing required field "reset_password_key_created_at"`)}
+	}
+	if _, ok := uc.mutation.Height(); !ok {
+		return &ValidationError{Name: "height", err: errors.New(`ent: missing required field "height"`)}
+	}
+	if _, ok := uc.mutation.HeightDisplay(); !ok {
+		return &ValidationError{Name: "height_display", err: errors.New(`ent: missing required field "height_display"`)}
+	}
+	if v, ok := uc.mutation.HeightDisplay(); ok {
+		if err := user.HeightDisplayValidator(v); err != nil {
+			return &ValidationError{Name: "height_display", err: fmt.Errorf(`ent: validator failed for field "height_display": %w`, err)}
+		}
+	}
+	if _, ok := uc.mutation.Weight(); !ok {
+		return &ValidationError{Name: "weight", err: errors.New(`ent: missing required field "weight"`)}
+	}
+	if _, ok := uc.mutation.WeightDisplay(); !ok {
+		return &ValidationError{Name: "weight_display", err: errors.New(`ent: missing required field "weight_display"`)}
+	}
+	if v, ok := uc.mutation.WeightDisplay(); ok {
+		if err := user.WeightDisplayValidator(v); err != nil {
+			return &ValidationError{Name: "weight_display", err: fmt.Errorf(`ent: validator failed for field "weight_display": %w`, err)}
+		}
+	}
+	if _, ok := uc.mutation.Wingspan(); !ok {
+		return &ValidationError{Name: "wingspan", err: errors.New(`ent: missing required field "wingspan"`)}
+	}
+	if _, ok := uc.mutation.WingspanDisplay(); !ok {
+		return &ValidationError{Name: "wingspan_display", err: errors.New(`ent: missing required field "wingspan_display"`)}
+	}
+	if v, ok := uc.mutation.WingspanDisplay(); ok {
+		if err := user.WingspanDisplayValidator(v); err != nil {
+			return &ValidationError{Name: "wingspan_display", err: fmt.Errorf(`ent: validator failed for field "wingspan_display": %w`, err)}
+		}
+	}
+	if _, ok := uc.mutation.Birthday(); !ok {
+		return &ValidationError{Name: "birthday", err: errors.New(`ent: missing required field "birthday"`)}
+	}
+	if _, ok := uc.mutation.BirthdayDisplay(); !ok {
+		return &ValidationError{Name: "birthday_display", err: errors.New(`ent: missing required field "birthday_display"`)}
+	}
+	if v, ok := uc.mutation.BirthdayDisplay(); ok {
+		if err := user.BirthdayDisplayValidator(v); err != nil {
+			return &ValidationError{Name: "birthday_display", err: fmt.Errorf(`ent: validator failed for field "birthday_display": %w`, err)}
+		}
+	}
+	if _, ok := uc.mutation.Gender(); !ok {
+		return &ValidationError{Name: "gender", err: errors.New(`ent: missing required field "gender"`)}
+	}
+	if v, ok := uc.mutation.Gender(); ok {
+		if err := user.GenderValidator(v); err != nil {
+			return &ValidationError{Name: "gender", err: fmt.Errorf(`ent: validator failed for field "gender": %w`, err)}
+		}
+	}
+	if _, ok := uc.mutation.GenderDisplay(); !ok {
+		return &ValidationError{Name: "gender_display", err: errors.New(`ent: missing required field "gender_display"`)}
+	}
+	if v, ok := uc.mutation.GenderDisplay(); ok {
+		if err := user.GenderDisplayValidator(v); err != nil {
+			return &ValidationError{Name: "gender_display", err: fmt.Errorf(`ent: validator failed for field "gender_display": %w`, err)}
+		}
 	}
 	if _, ok := uc.mutation.CreatedAt(); !ok {
 		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "created_at"`)}
@@ -393,6 +501,86 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 			Column: user.FieldResetPasswordKeyCreatedAt,
 		})
 		_node.ResetPasswordKeyCreatedAt = value
+	}
+	if value, ok := uc.mutation.Height(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: user.FieldHeight,
+		})
+		_node.Height = value
+	}
+	if value, ok := uc.mutation.HeightDisplay(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeEnum,
+			Value:  value,
+			Column: user.FieldHeightDisplay,
+		})
+		_node.HeightDisplay = value
+	}
+	if value, ok := uc.mutation.Weight(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: user.FieldWeight,
+		})
+		_node.Weight = value
+	}
+	if value, ok := uc.mutation.WeightDisplay(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeEnum,
+			Value:  value,
+			Column: user.FieldWeightDisplay,
+		})
+		_node.WeightDisplay = value
+	}
+	if value, ok := uc.mutation.Wingspan(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: user.FieldWingspan,
+		})
+		_node.Wingspan = value
+	}
+	if value, ok := uc.mutation.WingspanDisplay(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeEnum,
+			Value:  value,
+			Column: user.FieldWingspanDisplay,
+		})
+		_node.WingspanDisplay = value
+	}
+	if value, ok := uc.mutation.Birthday(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: user.FieldBirthday,
+		})
+		_node.Birthday = value
+	}
+	if value, ok := uc.mutation.BirthdayDisplay(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeEnum,
+			Value:  value,
+			Column: user.FieldBirthdayDisplay,
+		})
+		_node.BirthdayDisplay = value
+	}
+	if value, ok := uc.mutation.Gender(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeEnum,
+			Value:  value,
+			Column: user.FieldGender,
+		})
+		_node.Gender = value
+	}
+	if value, ok := uc.mutation.GenderDisplay(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeEnum,
+			Value:  value,
+			Column: user.FieldGenderDisplay,
+		})
+		_node.GenderDisplay = value
 	}
 	if value, ok := uc.mutation.CreatedAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{

@@ -2,5 +2,15 @@ query myself {
   myself {
     id
     name
+    gender
+    genderDisplay
+    height
+    heightDisplay
+    wingspan
+    wingspanDisplay
+    weight
+    weightDisplay
+    birthday
+    birthdayDisplay
   }
 }

@@ -8,6 +8,17 @@ enum UserOrderField {
   NAME
 }
 
+enum DisplayFlag {
+  PRIVATE
+  FRIENDS
+  PUBLIC
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
 interface Node {
   id: ID!
 }
@@ -16,6 +27,22 @@ type User implements Node {
   id: ID!
   email: String!
   name: String!
+}
+
+type Myself {
+  id: ID!
+  email: String!
+  name: String!
+  height: Int!
+  heightDisplay: String!
+  weight: Int!
+  weightDisplay: String!
+  wingspan: Int!
+  wingspanDisplay: String!
+  birthday: Date!
+  birthdayDisplay: String!
+  gender: Date!
+  genderDisplay: String!
 }
 
 scalar Cursor
@@ -53,6 +80,16 @@ input RegisterUserInput {
   key: String!
   name: String!
   password: String!
+  height: Int!
+  heightDisplay: DisplayFlag!
+  weight: Int!
+  weightDisplay: DisplayFlag!
+  wingspan: Int!
+  wingspanDisplay: DisplayFlag!
+  birthday: Date!
+  birthdayDisplay: DisplayFlag!
+  gender: Gender!
+  genderDisplay: DisplayFlag!
 }
 
 type Query {
@@ -66,7 +103,7 @@ type Query {
   existUserEmail(email: String!): Boolean!
   isValidRegistrationKey(key: String!): User!
   isValidResetPasswordKey(key: String!): User!
-  myself: User!
+  myself: Myself!
 }
 
 type Mutation {
@@ -76,3 +113,6 @@ type Mutation {
   resetPasswordRequest(email: String!): Boolean!
   resetPassword(key: String!, password: String!): User
 }
+
+"Date in ISO8601 e.g. 2006-01-31"
+scalar Date

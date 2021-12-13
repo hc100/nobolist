@@ -3,6 +3,9 @@
 package user
 
 import (
+	"fmt"
+	"io"
+	"strconv"
 	"time"
 )
 
@@ -31,6 +34,26 @@ const (
 	FieldResetPasswordKey = "reset_password_key"
 	// FieldResetPasswordKeyCreatedAt holds the string denoting the reset_password_key_created_at field in the database.
 	FieldResetPasswordKeyCreatedAt = "reset_password_key_created_at"
+	// FieldHeight holds the string denoting the height field in the database.
+	FieldHeight = "height"
+	// FieldHeightDisplay holds the string denoting the height_display field in the database.
+	FieldHeightDisplay = "height_display"
+	// FieldWeight holds the string denoting the weight field in the database.
+	FieldWeight = "weight"
+	// FieldWeightDisplay holds the string denoting the weight_display field in the database.
+	FieldWeightDisplay = "weight_display"
+	// FieldWingspan holds the string denoting the wingspan field in the database.
+	FieldWingspan = "wingspan"
+	// FieldWingspanDisplay holds the string denoting the wingspan_display field in the database.
+	FieldWingspanDisplay = "wingspan_display"
+	// FieldBirthday holds the string denoting the birthday field in the database.
+	FieldBirthday = "birthday"
+	// FieldBirthdayDisplay holds the string denoting the birthday_display field in the database.
+	FieldBirthdayDisplay = "birthday_display"
+	// FieldGender holds the string denoting the gender field in the database.
+	FieldGender = "gender"
+	// FieldGenderDisplay holds the string denoting the gender_display field in the database.
+	FieldGenderDisplay = "gender_display"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
 	FieldCreatedAt = "created_at"
 	// FieldUpdatedAt holds the string denoting the updated_at field in the database.
@@ -52,6 +75,16 @@ var Columns = []string{
 	FieldRole,
 	FieldResetPasswordKey,
 	FieldResetPasswordKeyCreatedAt,
+	FieldHeight,
+	FieldHeightDisplay,
+	FieldWeight,
+	FieldWeightDisplay,
+	FieldWingspan,
+	FieldWingspanDisplay,
+	FieldBirthday,
+	FieldBirthdayDisplay,
+	FieldGender,
+	FieldGenderDisplay,
 	FieldCreatedAt,
 	FieldUpdatedAt,
 }
@@ -71,8 +104,6 @@ var (
 	DefaultActive bool
 	// DefaultEmailAuthenticationStatus holds the default value on creation for the "email_authentication_status" field.
 	DefaultEmailAuthenticationStatus bool
-	// DefaultName holds the default value on creation for the "name" field.
-	DefaultName string
 	// DefaultPassword holds the default value on creation for the "password" field.
 	DefaultPassword string
 	// DefaultRole holds the default value on creation for the "role" field.
@@ -81,4 +112,257 @@ var (
 	DefaultCreatedAt func() time.Time
 	// DefaultUpdatedAt holds the default value on creation for the "updated_at" field.
 	DefaultUpdatedAt func() time.Time
+	// UpdateDefaultUpdatedAt holds the default value on update for the "updated_at" field.
+	UpdateDefaultUpdatedAt func() time.Time
 )
+
+// HeightDisplay defines the type for the "height_display" enum field.
+type HeightDisplay string
+
+// HeightDisplay values.
+const (
+	HeightDisplayPRIVATE HeightDisplay = "PRIVATE"
+	HeightDisplayFRIENDS HeightDisplay = "FRIENDS"
+	HeightDisplayPUBLIC  HeightDisplay = "PUBLIC"
+)
+
+func (hd HeightDisplay) String() string {
+	return string(hd)
+}
+
+// HeightDisplayValidator is a validator for the "height_display" field enum values. It is called by the builders before save.
+func HeightDisplayValidator(hd HeightDisplay) error {
+	switch hd {
+	case HeightDisplayPRIVATE, HeightDisplayFRIENDS, HeightDisplayPUBLIC:
+		return nil
+	default:
+		return fmt.Errorf("user: invalid enum value for height_display field: %q", hd)
+	}
+}
+
+// WeightDisplay defines the type for the "weight_display" enum field.
+type WeightDisplay string
+
+// WeightDisplay values.
+const (
+	WeightDisplayPRIVATE WeightDisplay = "PRIVATE"
+	WeightDisplayFRIENDS WeightDisplay = "FRIENDS"
+	WeightDisplayPUBLIC  WeightDisplay = "PUBLIC"
+)
+
+func (wd WeightDisplay) String() string {
+	return string(wd)
+}
+
+// WeightDisplayValidator is a validator for the "weight_display" field enum values. It is called by the builders before save.
+func WeightDisplayValidator(wd WeightDisplay) error {
+	switch wd {
+	case WeightDisplayPRIVATE, WeightDisplayFRIENDS, WeightDisplayPUBLIC:
+		return nil
+	default:
+		return fmt.Errorf("user: invalid enum value for weight_display field: %q", wd)
+	}
+}
+
+// WingspanDisplay defines the type for the "wingspan_display" enum field.
+type WingspanDisplay string
+
+// WingspanDisplay values.
+const (
+	WingspanDisplayPRIVATE WingspanDisplay = "PRIVATE"
+	WingspanDisplayFRIENDS WingspanDisplay = "FRIENDS"
+	WingspanDisplayPUBLIC  WingspanDisplay = "PUBLIC"
+)
+
+func (wd WingspanDisplay) String() string {
+	return string(wd)
+}
+
+// WingspanDisplayValidator is a validator for the "wingspan_display" field enum values. It is called by the builders before save.
+func WingspanDisplayValidator(wd WingspanDisplay) error {
+	switch wd {
+	case WingspanDisplayPRIVATE, WingspanDisplayFRIENDS, WingspanDisplayPUBLIC:
+		return nil
+	default:
+		return fmt.Errorf("user: invalid enum value for wingspan_display field: %q", wd)
+	}
+}
+
+// BirthdayDisplay defines the type for the "birthday_display" enum field.
+type BirthdayDisplay string
+
+// BirthdayDisplay values.
+const (
+	BirthdayDisplayPRIVATE BirthdayDisplay = "PRIVATE"
+	BirthdayDisplayFRIENDS BirthdayDisplay = "FRIENDS"
+	BirthdayDisplayPUBLIC  BirthdayDisplay = "PUBLIC"
+)
+
+func (bd BirthdayDisplay) String() string {
+	return string(bd)
+}
+
+// BirthdayDisplayValidator is a validator for the "birthday_display" field enum values. It is called by the builders before save.
+func BirthdayDisplayValidator(bd BirthdayDisplay) error {
+	switch bd {
+	case BirthdayDisplayPRIVATE, BirthdayDisplayFRIENDS, BirthdayDisplayPUBLIC:
+		return nil
+	default:
+		return fmt.Errorf("user: invalid enum value for birthday_display field: %q", bd)
+	}
+}
+
+// Gender defines the type for the "gender" enum field.
+type Gender string
+
+// Gender values.
+const (
+	GenderMALE   Gender = "MALE"
+	GenderFEMALE Gender = "FEMALE"
+)
+
+func (ge Gender) String() string {
+	return string(ge)
+}
+
+// GenderValidator is a validator for the "gender" field enum values. It is called by the builders before save.
+func GenderValidator(ge Gender) error {
+	switch ge {
+	case GenderMALE, GenderFEMALE:
+		return nil
+	default:
+		return fmt.Errorf("user: invalid enum value for gender field: %q", ge)
+	}
+}
+
+// GenderDisplay defines the type for the "gender_display" enum field.
+type GenderDisplay string
+
+// GenderDisplay values.
+const (
+	GenderDisplayPRIVATE GenderDisplay = "PRIVATE"
+	GenderDisplayFRIENDS GenderDisplay = "FRIENDS"
+	GenderDisplayPUBLIC  GenderDisplay = "PUBLIC"
+)
+
+func (gd GenderDisplay) String() string {
+	return string(gd)
+}
+
+// GenderDisplayValidator is a validator for the "gender_display" field enum values. It is called by the builders before save.
+func GenderDisplayValidator(gd GenderDisplay) error {
+	switch gd {
+	case GenderDisplayPRIVATE, GenderDisplayFRIENDS, GenderDisplayPUBLIC:
+		return nil
+	default:
+		return fmt.Errorf("user: invalid enum value for gender_display field: %q", gd)
+	}
+}
+
+// MarshalGQL implements graphql.Marshaler interface.
+func (hd HeightDisplay) MarshalGQL(w io.Writer) {
+	io.WriteString(w, strconv.Quote(hd.String()))
+}
+
+// UnmarshalGQL implements graphql.Unmarshaler interface.
+func (hd *HeightDisplay) UnmarshalGQL(val interface{}) error {
+	str, ok := val.(string)
+	if !ok {
+		return fmt.Errorf("enum %T must be a string", val)
+	}
+	*hd = HeightDisplay(str)
+	if err := HeightDisplayValidator(*hd); err != nil {
+		return fmt.Errorf("%s is not a valid HeightDisplay", str)
+	}
+	return nil
+}
+
+// MarshalGQL implements graphql.Marshaler interface.
+func (wd WeightDisplay) MarshalGQL(w io.Writer) {
+	io.WriteString(w, strconv.Quote(wd.String()))
+}
+
+// UnmarshalGQL implements graphql.Unmarshaler interface.
+func (wd *WeightDisplay) UnmarshalGQL(val interface{}) error {
+	str, ok := val.(string)
+	if !ok {
+		return fmt.Errorf("enum %T must be a string", val)
+	}
+	*wd = WeightDisplay(str)
+	if err := WeightDisplayValidator(*wd); err != nil {
+		return fmt.Errorf("%s is not a valid WeightDisplay", str)
+	}
+	return nil
+}
+
+// MarshalGQL implements graphql.Marshaler interface.
+func (wd WingspanDisplay) MarshalGQL(w io.Writer) {
+	io.WriteString(w, strconv.Quote(wd.String()))
+}
+
+// UnmarshalGQL implements graphql.Unmarshaler interface.
+func (wd *WingspanDisplay) UnmarshalGQL(val interface{}) error {
+	str, ok := val.(string)
+	if !ok {
+		return fmt.Errorf("enum %T must be a string", val)
+	}
+	*wd = WingspanDisplay(str)
+	if err := WingspanDisplayValidator(*wd); err != nil {
+		return fmt.Errorf("%s is not a valid WingspanDisplay", str)
+	}
+	return nil
+}
+
+// MarshalGQL implements graphql.Marshaler interface.
+func (bd BirthdayDisplay) MarshalGQL(w io.Writer) {
+	io.WriteString(w, strconv.Quote(bd.String()))
+}
+
+// UnmarshalGQL implements graphql.Unmarshaler interface.
+func (bd *BirthdayDisplay) UnmarshalGQL(val interface{}) error {
+	str, ok := val.(string)
+	if !ok {
+		return fmt.Errorf("enum %T must be a string", val)
+	}
+	*bd = BirthdayDisplay(str)
+	if err := BirthdayDisplayValidator(*bd); err != nil {
+		return fmt.Errorf("%s is not a valid BirthdayDisplay", str)
+	}
+	return nil
+}
+
+// MarshalGQL implements graphql.Marshaler interface.
+func (ge Gender) MarshalGQL(w io.Writer) {
+	io.WriteString(w, strconv.Quote(ge.String()))
+}
+
+// UnmarshalGQL implements graphql.Unmarshaler interface.
+func (ge *Gender) UnmarshalGQL(val interface{}) error {
+	str, ok := val.(string)
+	if !ok {
+		return fmt.Errorf("enum %T must be a string", val)
+	}
+	*ge = Gender(str)
+	if err := GenderValidator(*ge); err != nil {
+		return fmt.Errorf("%s is not a valid Gender", str)
+	}
+	return nil
+}
+
+// MarshalGQL implements graphql.Marshaler interface.
+func (gd GenderDisplay) MarshalGQL(w io.Writer) {
+	io.WriteString(w, strconv.Quote(gd.String()))
+}
+
+// UnmarshalGQL implements graphql.Unmarshaler interface.
+func (gd *GenderDisplay) UnmarshalGQL(val interface{}) error {
+	str, ok := val.(string)
+	if !ok {
+		return fmt.Errorf("enum %T must be a string", val)
+	}
+	*gd = GenderDisplay(str)
+	if err := GenderDisplayValidator(*gd); err != nil {
+		return fmt.Errorf("%s is not a valid GenderDisplay", str)
+	}
+	return nil
+}

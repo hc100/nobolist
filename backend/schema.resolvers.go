@@ -257,13 +257,29 @@ func (r *queryResolver) IsValidResetPasswordKey(ctx context.Context, key string)
 	return u, nil
 }
 
-func (r *queryResolver) Myself(ctx context.Context) (*ent.User, error) {
+func (r *queryResolver) Myself(ctx context.Context) (*Myself, error) {
 	u := auth.ForContext(ctx)
 	if u == nil {
 		return nil, fmt.Errorf("Access denied")
 	}
 
-	return u, nil
+	m := &Myself{
+		ID:              u.ID,
+		Name:            u.Name,
+		Email:           u.Email,
+		Height:          u.Height,
+		HeightDisplay:   u.HeightDisplay.String(),
+		Weight:          u.Weight,
+		WeightDisplay:   u.WeightDisplay.String(),
+		Wingspan:        u.Wingspan,
+		WingspanDisplay: u.WingspanDisplay.String(),
+		Birthday:        u.Birthday.Format("2006-01-02"),
+		BirthdayDisplay: u.BirthdayDisplay.String(),
+		Gender:          u.Gender.String(),
+		GenderDisplay:   u.GenderDisplay.String(),
+	}
+
+	return m, nil
 }
 
 // Mutation returns MutationResolver implementation.

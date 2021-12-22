@@ -92,6 +92,20 @@ input RegisterUserInput {
   genderDisplay: DisplayFlag!
 }
 
+input UpdateUserInput {
+  name: String!
+  height: Int!
+  heightDisplay: DisplayFlag!
+  weight: Int!
+  weightDisplay: DisplayFlag!
+  wingspan: Int!
+  wingspanDisplay: DisplayFlag!
+  birthday: Date!
+  birthdayDisplay: DisplayFlag!
+  gender: Gender!
+  genderDisplay: DisplayFlag!
+}
+
 type Query {
   users(
     after: Cursor
@@ -108,6 +122,7 @@ type Query {
 
 type Mutation {
   createUser(email: String!): User!
+  updateUser(input: UpdateUserInput!): User!
   registerUser(input: RegisterUserInput!): User!
   login(email: String!, password: String!): Token!
   resetPasswordRequest(email: String!): Boolean!

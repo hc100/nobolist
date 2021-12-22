@@ -58,6 +58,41 @@ func (r *mutationResolver) CreateUser(ctx context.Context, email string) (*ent.U
 	return u, nil
 }
 
+func (r *mutationResolver) UpdateUser(ctx context.Context, input UpdateUserInput) (*ent.User, error) {
+	u := auth.ForContext(ctx)
+	if u == nil {
+		return nil, fmt.Errorf("Access denied")
+	}
+
+	layout := "2006-01-02"
+	birthday, err := time.Parse(layout, input.Birthday)
+
+	u, err = u.Update().
+		SetName(input.Name).
+		SetHeight(input.Height).
+		SetHeightDisplay(user.HeightDisplay(input.HeightDisplay)).
+		SetWeight(input.Weight).
+		SetWeightDisplay(user.WeightDisplay(input.WeightDisplay)).
+		SetWingspan(input.Wingspan).
+		SetWingspanDisplay(user.WingspanDisplay(input.WingspanDisplay)).
+		SetBirthday(birthday).
+		SetBirthdayDisplay(user.BirthdayDisplay(input.BirthdayDisplay)).
+		SetGender(user.Gender(input.Gender)).
+		SetGenderDisplay(user.GenderDisplay(input.GenderDisplay)).
+		SetUpdatedAt(time.Now()).
+		Save(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	err = sendmail.UserRegistrationComplete(u.Email)
+	if err != nil {
+		return nil, err
+	}
+
+	return u, nil
+}
+
 func (r *mutationResolver) RegisterUser(ctx context.Context, input RegisterUserInput) (*ent.User, error) {
 	u, err := r.client.User.
 		Query().

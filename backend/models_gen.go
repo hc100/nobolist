@@ -46,6 +46,20 @@ type Token struct {
 	Role         int    `json:"role"`
 }
 
+type UpdateUserInput struct {
+	Name            string      `json:"name"`
+	Height          int         `json:"height"`
+	HeightDisplay   DisplayFlag `json:"heightDisplay"`
+	Weight          int         `json:"weight"`
+	WeightDisplay   DisplayFlag `json:"weightDisplay"`
+	Wingspan        int         `json:"wingspan"`
+	WingspanDisplay DisplayFlag `json:"wingspanDisplay"`
+	Birthday        string      `json:"birthday"`
+	BirthdayDisplay DisplayFlag `json:"birthdayDisplay"`
+	Gender          Gender      `json:"gender"`
+	GenderDisplay   DisplayFlag `json:"genderDisplay"`
+}
+
 type DisplayFlag string
 
 const (
